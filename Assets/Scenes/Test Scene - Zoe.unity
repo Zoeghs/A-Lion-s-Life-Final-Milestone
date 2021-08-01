@@ -1563,7 +1563,7 @@ MonoBehaviour:
   - {fileID: 509686150}
   - {fileID: 266185730}
   - {fileID: 1530053609}
-  depletionRate: 0.02
+  depletionRate: 0.015
 --- !u!1 &910921528
 GameObject:
   m_ObjectHideFlags: 0

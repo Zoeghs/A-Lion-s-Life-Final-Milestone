@@ -10,7 +10,7 @@ public class ResourceDepletion : MonoBehaviour
 
     // Resource nums
     [SerializeField] float depletionRate;
-    //[SerializeField] float totalTimeToDeplete;
+    private float originalDepletionRate;
     private float currentAmount;
     private float totalAmount;
 
@@ -18,12 +18,22 @@ public class ResourceDepletion : MonoBehaviour
     private Color originalColour;
     private Color depletedColour = Color.black;
 
+    // Access to player movement script
+    private PlayerMovement playerMovement;
+
+    // Depletion rate increase bool
+    private bool isIncreased = false;
+
     void Start()
     {
         // Set full resource amounts and original colour
         totalAmount = resources.Length;
         originalColour = resources[0].color;
         currentAmount = totalAmount;
+        originalDepletionRate = depletionRate;
+
+        // Get player movement script
+        playerMovement = gameObject.GetComponent<PlayerMovement>();
     }
 
     void Update()
@@ -43,38 +53,61 @@ public class ResourceDepletion : MonoBehaviour
             currentAmount = 0;
         }
 
-        print("Current:" + currentAmount);
-        print("Ratio:" + currentAmount / totalAmount);
-
+        // Update UI visual
         UpdateVisual();
+
+        // Check is player is sprinting and adjust depletion rate accordingly
+        SprintDepletionIncrease();
     }
 
     private void UpdateVisual()
     {
-        // Update the display to match new current amount (need to make this adaptable to a %)
-        if (currentAmount == 5)
-        {
+        // Convert current amount into a %
+        float amountPercent = currentAmount / totalAmount;
 
-        }
-        else if (currentAmount <= 4 && currentAmount > 3)
+        // Take the number of the resource and put it under 1 to find out how much percent is one resource worth
+        float singleResourcePercent = 1 / totalAmount;
+
+        // If resources are depleted enough to show on 'meter'
+        if (amountPercent < totalAmount - singleResourcePercent)
         {
-            resources[4].color = depletedColour;
+            // Get how many of the resource icons should be filled in
+            float visualRecourceAmount = amountPercent * totalAmount;
+
+            // Once the resource hits 0
+            if (currentAmount <= 0)
+            {
+                // Update UI visual to reflect the current amount
+                resources[0].color = depletedColour;
+            }
+            // Convert to int (only becomes lower num when at that num or below)
+            else if (visualRecourceAmount <= (int)visualRecourceAmount + 1 && (int)visualRecourceAmount + 1 != totalAmount)
+            {
+                // Update UI visual to reflect the current amount
+                resources[(int)visualRecourceAmount + 1].color = depletedColour;
+            }
         }
-        else if (currentAmount <= 3 && currentAmount > 2)
+    }
+
+    private void SprintDepletionIncrease()
+    {
+        // If the player is sprinting
+        if (playerMovement.isSprinting == true && isIncreased == false)
         {
-            resources[3].color = depletedColour;
+            // Increase the depletion rate
+            depletionRate += 0.01f;
+
+            // Depletion rate has been increased
+            isIncreased = true;
         }
-        else if (currentAmount <= 2 && currentAmount > 1)
+        // If the player is not sprinting
+        else if (playerMovement.isSprinting == false && isIncreased == true)
         {
-            resources[2].color = depletedColour;
-        }
-        else if (currentAmount <= 1 && currentAmount > 0)
-        {
-            resources[1].color = depletedColour;
-        }
-        else if (currentAmount <= 0)
-        {
-            resources[0].color = depletedColour;
+            // Return depletion rate to normal
+            depletionRate = originalDepletionRate;
+
+            // Depletion rate has been decreased
+            isIncreased = false;
         }
     }
 
