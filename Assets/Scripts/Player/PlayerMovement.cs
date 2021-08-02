@@ -21,7 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 vel;
 
     // Player's gravity
-    private float grav = -19.62f * 2;
+    private float grav = -19.62f * 1.5f;
 
     // Ground check vars
     [SerializeField] Transform groundCheck;

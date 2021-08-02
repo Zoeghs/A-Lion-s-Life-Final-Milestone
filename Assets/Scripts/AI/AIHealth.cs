@@ -8,8 +8,9 @@ public class AIHealth : MonoBehaviour
     // Get camera to look at
     [SerializeField] Camera mainCamera;
 
-    // Access to damage script
+    // Access to other scripts
     [SerializeField] AITakeDamage takeDamage;
+    [SerializeField] Attacks playerAttacks;
 
     // Array of health to deplete (UI Images)
     [SerializeField] Image[] healthPoints;
@@ -17,6 +18,7 @@ public class AIHealth : MonoBehaviour
     // Resource nums
     private float currentAmount;
     private float totalAmount;
+    private float previousAmount;
 
     // Colour vars
     private Color originalColour;
@@ -31,6 +33,7 @@ public class AIHealth : MonoBehaviour
         totalAmount = healthPoints.Length;
         originalColour = healthPoints[0].color;
         currentAmount = totalAmount;
+        previousAmount = currentAmount;
     }
 
     void Update()
@@ -52,43 +55,31 @@ public class AIHealth : MonoBehaviour
     private void TakeDamage()
     {
         // If the object has been hit
-        if(takeDamage.isHit == true)
+        if(takeDamage.isHit == true && playerAttacks.quickOnCooldown == false)
         {
             currentAmount -= quickScratchDamage;
-        }
 
-        // Update health visuals
-        UpdateDamageVisual();
+            // Only deplete health if above 0
+            if (currentAmount < 0)
+            {
+                // Clamp to 0
+                currentAmount = 0;
+
+                // vv Add death code in here vv
+            }
+
+            // Save prevoius amount to new current amount
+            previousAmount = currentAmount;
+
+            // Update health visuals
+            UpdateDamageVisual();
+
+            takeDamage.OnMouseUp();
+        }
     }
 
     private void UpdateDamageVisual()
     {
-        //healthPoints[(int)currentAmount].color = depletedColour;
-
-        // Convert current amount into a %
-        float amountPercent = currentAmount / totalAmount;
-
-        // Take the number of the resource and put it under 1 to find out how much percent is one resource worth
-        float singleResourcePercent = 1 / totalAmount;
-
-        // If resources are depleted enough to show on 'meter'
-        if (amountPercent < totalAmount - singleResourcePercent)
-        {
-            // Get how many of the resource icons should be filled in
-            float visualRecourceAmount = amountPercent * totalAmount;
-
-            // Once the resource hits 0
-            if (currentAmount <= 0)
-            {
-                // Update UI visual to reflect the current amount
-                healthPoints[0].color = depletedColour;
-            }
-            // Convert to int (only becomes lower num when at that num or below)
-            else if (visualRecourceAmount <= (int)visualRecourceAmount + 1 && (int)visualRecourceAmount + 1 != totalAmount)
-            {
-                // Update UI visual to reflect the current amount
-                healthPoints[(int)visualRecourceAmount + 1].color = depletedColour;
-            }
-        }
+        healthPoints[(int)currentAmount].color = depletedColour;
     }
 }
