@@ -9,13 +9,13 @@ public class PlayerMovement : MonoBehaviour
     private float z;
 
     // Speed of the player
-    [SerializeField] float originalMoveSpeed;
+    private float originalMoveSpeed;
     [SerializeField] float moveSpeed = 6f;
     [SerializeField] float sprintSpeed = 12f;
     [HideInInspector] public float currentSpeed;
 
     // Var to store character controller
-    [SerializeField] CharacterController playerCont;
+    private CharacterController playerCont;
 
     // Player's velocity
     private Vector3 vel;
