@@ -19,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     // Player's velocity
     private Vector3 vel;
+    private float originalVelZ;
 
     // Player's gravity
     private float grav = -19.62f * 1.5f;
@@ -43,6 +44,9 @@ public class PlayerMovement : MonoBehaviour
 
         // Save original move speed
         originalMoveSpeed = moveSpeed;
+
+        // Save original z velocity
+        originalVelZ = vel.z;
     }
 
     void Update()
@@ -157,6 +161,13 @@ public class PlayerMovement : MonoBehaviour
 
             // Player is now jumping
             isJumping = true;
+
+            // If player is also sprinting and has not hit the speed cap
+            if (isSprinting == true && moveSpeed < 32)
+            {
+                // Give them some forward momentum
+                moveSpeed *= 2;
+            }
         }
     }
 }
