@@ -24,7 +24,6 @@ public class AITakeDamage : MonoBehaviour
     // Visual delay timer
     private float originalTime;
     private float timer = 0.5f;
-    private bool startTimer = false;
 
     void Start()
     {
@@ -68,9 +67,6 @@ public class AITakeDamage : MonoBehaviour
     {
         // The object is no longer being hit
         isHit = false;
-
-        // Make hit UI invisable, after delay
-        startTimer = true;
     }
 
     private void HitVisualDelay()
@@ -88,7 +84,6 @@ public class AITakeDamage : MonoBehaviour
 
             // Reset timer
             timer = originalTime;
-            startTimer = false;
         }
     }
 }

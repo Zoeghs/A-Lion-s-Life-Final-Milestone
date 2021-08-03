@@ -32,8 +32,9 @@ public class PlayerMovement : MonoBehaviour
     // Player jump height
     [SerializeField] float jumpHeight = 2f;
 
-    // Sprinting mode detection
+    // Sprinting & jumping mode detection
     [HideInInspector] public bool isSprinting = false;
+    [HideInInspector] public bool isJumping = false;
 
     void Start()
     {
@@ -138,8 +139,11 @@ public class PlayerMovement : MonoBehaviour
         // If player is grounded, reset velocity
         if (isGrounded && vel.y < 0)
         {
-            // Set vel to something small so if check regesters before player is completely on the gorund, they can still fall
+            // Set vel to something small so if check regesters before player is completely on the ground, they can still fall
             vel.y = -2f;
+
+            // Player is no longer jumping
+            isJumping = false;
         }
     }
 
@@ -150,6 +154,9 @@ public class PlayerMovement : MonoBehaviour
         {
             // Player jumps
             vel.y = Mathf.Sqrt(jumpHeight * -2f * grav);
+
+            // Player is now jumping
+            isJumping = true;
         }
     }
 }

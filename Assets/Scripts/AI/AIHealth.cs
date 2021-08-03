@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class AIHealth : MonoBehaviour
 {
-    // Get camera to look at
-    [SerializeField] Camera mainCamera;
-
     // Access to other scripts
     [SerializeField] AITakeDamage takeDamage;
     [SerializeField] Attacks playerAttacks;
@@ -38,18 +35,8 @@ public class AIHealth : MonoBehaviour
 
     void Update()
     {
-        // Have UI look at the player's camera
-        FollowCam();
-
         // Check for damage taken
         TakeDamage();
-    }
-
-    private void FollowCam()
-    {
-        // Point health canvas at the camera
-        transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.back, mainCamera.transform.rotation * Vector3.up);
-
     }
 
     private void TakeDamage()
