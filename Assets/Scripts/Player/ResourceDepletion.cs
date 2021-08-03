@@ -21,11 +21,12 @@ public class ResourceDepletion : MonoBehaviour
     // Access to player movement script
     private PlayerMovement playerMovement;
 
-    // Depletion rate increase bool
-    private bool isIncreased = false;
-
     // Bool to tell if resources have been increased
     [HideInInspector] public bool hasIncreased = false;
+
+    // Rate increase bools
+    private bool sprintIncrease = false;
+    private bool jumpIncrease = false;
 
     void Start()
     {
@@ -55,19 +56,13 @@ public class ResourceDepletion : MonoBehaviour
             // Clamp to 0 (min)
             currentAmount = 0;
         }
-        // Do not increase more than the total amount
-        else if (currentAmount > totalAmount)
-        {
-            // Clamt to total amount (max)
-            currentAmount = totalAmount;
-        }
 
         // Update UI visual
         UpdateVisual();
 
         // Check is player is sprinting or jumping and adjust depletion rate accordingly
-        DepletionIncrease(playerMovement.isSprinting);
-        DepletionIncrease(playerMovement.isJumping);
+        SprintIncrease();
+        JumpIncrease();
     }
 
     private void UpdateVisual()
@@ -91,7 +86,7 @@ public class ResourceDepletion : MonoBehaviour
                 resources[0].color = depletedColour;
             }
             // Convert to int (only becomes lower num when at that num or below)
-            else if (visualRecourceAmount <= (int)visualRecourceAmount + 1 && (int)visualRecourceAmount + 1 != totalAmount)
+            else if (visualRecourceAmount <= (int)visualRecourceAmount + 1 && (int)visualRecourceAmount + 1 != totalAmount && hasIncreased == false)
             {
                 // Update UI visual to reflect the current amount
                 resources[(int)visualRecourceAmount + 1].color = depletedColour;
@@ -101,33 +96,72 @@ public class ResourceDepletion : MonoBehaviour
         // If the resource amount has increased
         if (hasIncreased == true)
         {
-            // Update UI visual to reflect the current amount
-            //resources[(int)visualRecourceAmount + 1].color = originalColour;
+            // Do not increase more than the total amount
+            if (currentAmount > totalAmount)
+            {
+                // Clamt to total amount (max)
+                currentAmount = totalAmount;
+            }
+
+            // If the last point is not coloured
+            if (resources[(int)totalAmount - 1].color != originalColour)
+            {
+                // Colour nessessary point
+                resources[(int)visualRecourceAmount].color = originalColour;
+            }
 
             // Reset bool
             hasIncreased = false;
         }
     }
 
-    private void DepletionIncrease(bool check)
+    private void SprintIncrease()
     {
+        // Create increase amount
+        float amount = 0.01f;
+
         // If the player is sprinting
-        if (check == true && isIncreased == false)
+        if (playerMovement.isSprinting == true && sprintIncrease == false)
         {
             // Increase the depletion rate
-            depletionRate += 0.01f;
+            depletionRate += amount;
 
             // Depletion rate has been increased
-            isIncreased = true;
+            sprintIncrease = true;
         }
         // If the player is not sprinting
-        else if (check == false && isIncreased == true)
+        else if (playerMovement.isSprinting == false && sprintIncrease == true)
         {
             // Return depletion rate to normal
-            depletionRate = originalDepletionRate;
+            depletionRate -= amount;
 
             // Depletion rate has been decreased
-            isIncreased = false;
+            sprintIncrease = false;
+        }
+    }
+
+    private void JumpIncrease()
+    {
+        // Create increase amount
+        float amount = 0.01f;
+
+        // If the player is sprinting
+        if (playerMovement.isJumping == true && jumpIncrease == false)
+        {
+            // Increase the depletion rate
+            depletionRate += amount;
+
+            // Depletion rate has been increased
+            jumpIncrease = true;
+        }
+        // If the player is not sprinting
+        else if (playerMovement.isJumping == false && jumpIncrease == true)
+        {
+            // Return depletion rate to normal
+            depletionRate -= amount;
+
+            // Depletion rate has been decreased
+            jumpIncrease = false;
         }
     }
 }

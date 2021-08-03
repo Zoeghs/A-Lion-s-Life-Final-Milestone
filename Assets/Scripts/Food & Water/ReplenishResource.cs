@@ -30,6 +30,12 @@ public class ReplenishResource : MonoBehaviour
     // How much of the resource the node gives
     [SerializeField] float restorationAmount;
 
+    // Access to the player
+    [SerializeField] Transform player;
+
+    // How close the player has to be in order to collect resource
+    private float distance = 5f;
+
     void Start()
     {
         // Turn off prompt
@@ -54,8 +60,19 @@ public class ReplenishResource : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        // When hovering over the resource, give button prompt
-        EnableTogglePrompt(true);
+        // Only execute if within distance
+        if (Vector3.Distance(player.position, gameObject.transform.position) <= distance)
+        {
+            // When hovering over the resource, give button prompt
+            EnableTogglePrompt(true);
+        }
+        // If player is farther away than the required distance
+        else
+        {
+            // Treat as mouse exit
+            OnMouseExit();
+        }
+
     }
 
     private void OnMouseExit()
@@ -72,22 +89,32 @@ public class ReplenishResource : MonoBehaviour
 
     private void OnMouseOver()
     {
-        // If the replenish key is held down
-        if (Input.GetKey(KeyCode.E))
+        // Only execute if within distance
+        if (Vector3.Distance(player.position, gameObject.transform.position) <= distance)
         {
-            Replenish();
+            // If the replenish key is held down
+            if (Input.GetKey(KeyCode.E))
+            {
+                Replenish();
+            }
+            // If the key is not held down
+            else
+            {
+                // Re-enable prompt
+                EnableTogglePrompt(true);
+
+                // Disable progress bar
+                EnableToggleBar(false);
+
+                // Reset pivot scale
+                ResetPivotScale();
+            }
         }
-        // If the key is not held down
+        // If player is farther away than the required distance
         else
         {
-            // Re-enable prompt
-            EnableTogglePrompt(true);
-
-            // Disable progress bar
-            EnableToggleBar(false);
-
-            // Reset pivot scale
-            ResetPivotScale();
+            // Treat as mouse exit
+            OnMouseExit();
         }
     }
 
