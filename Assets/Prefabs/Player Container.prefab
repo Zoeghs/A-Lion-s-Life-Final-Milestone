@@ -189,6 +189,8 @@ MonoBehaviour:
   jumpHeight: 2
   isSprinting: 0
   isJumping: 0
+  foodDepletion: {fileID: 8282167512590115360}
+  waterDepletion: {fileID: 8282167513108115375}
 --- !u!114 &8282167512030415420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +258,7 @@ MonoBehaviour:
   depletionRate: 0.01
   currentAmount: 0
   hasIncreased: 0
+  sprintIncrease: 0
 --- !u!1 &8282167512628293063
 GameObject:
   m_ObjectHideFlags: 0
@@ -501,3 +504,4 @@ MonoBehaviour:
   depletionRate: 0.015
   currentAmount: 0
   hasIncreased: 0
+  sprintIncrease: 0

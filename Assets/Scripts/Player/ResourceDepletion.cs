@@ -25,8 +25,13 @@ public class ResourceDepletion : MonoBehaviour
     [HideInInspector] public bool hasIncreased = false;
 
     // Rate increase bools
-    private bool sprintIncrease = false;
+    [HideInInspector] public bool sprintIncrease = false;
     private bool jumpIncrease = false;
+
+    // How much to increase depletion rates by
+    private float currentSprintAmount;
+    private float sprintAmount = 0.001f;
+    private float jumpAmount = 0.01f;
 
     void Start()
     {
@@ -117,14 +122,23 @@ public class ResourceDepletion : MonoBehaviour
 
     private void SprintIncrease()
     {
-        // Create increase amount
-        float amount = 0.01f;
-
         // If the player is sprinting
         if (playerMovement.isSprinting == true && sprintIncrease == false)
         {
             // Increase the depletion rate
-            depletionRate += amount;
+            depletionRate += sprintAmount * playerMovement.moveSpeed;
+
+            // Save current sprint amount
+            if (jumpIncrease == false)
+            {
+                // If there is no jump increase, set to just what was added to the rate
+                currentSprintAmount = depletionRate - originalDepletionRate;
+            }
+            else
+            {
+                // If there is a jump increase, compensate and do not save with extra from the jump
+                currentSprintAmount = depletionRate - jumpAmount - originalDepletionRate;
+            }
 
             // Depletion rate has been increased
             sprintIncrease = true;
@@ -133,7 +147,7 @@ public class ResourceDepletion : MonoBehaviour
         else if (playerMovement.isSprinting == false && sprintIncrease == true)
         {
             // Return depletion rate to normal
-            depletionRate -= amount;
+            depletionRate -= currentSprintAmount;
 
             // Depletion rate has been decreased
             sprintIncrease = false;
@@ -142,14 +156,11 @@ public class ResourceDepletion : MonoBehaviour
 
     private void JumpIncrease()
     {
-        // Create increase amount
-        float amount = 0.01f;
-
         // If the player is sprinting
         if (playerMovement.isJumping == true && jumpIncrease == false)
         {
             // Increase the depletion rate
-            depletionRate += amount;
+            depletionRate += jumpAmount;
 
             // Depletion rate has been increased
             jumpIncrease = true;
@@ -158,7 +169,7 @@ public class ResourceDepletion : MonoBehaviour
         else if (playerMovement.isJumping == false && jumpIncrease == true)
         {
             // Return depletion rate to normal
-            depletionRate -= amount;
+            depletionRate -= jumpAmount;
 
             // Depletion rate has been decreased
             jumpIncrease = false;

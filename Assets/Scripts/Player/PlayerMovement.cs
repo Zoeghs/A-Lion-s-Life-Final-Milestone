@@ -19,7 +19,6 @@ public class PlayerMovement : MonoBehaviour
 
     // Player's velocity
     private Vector3 vel;
-    private float originalVelZ;
 
     // Player's gravity
     private float grav = -19.62f * 1.5f;
@@ -37,6 +36,10 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public bool isSprinting = false;
     [HideInInspector] public bool isJumping = false;
 
+    // Access to resource depletion scripts
+    [SerializeField] ResourceDepletion foodDepletion;
+    [SerializeField] ResourceDepletion waterDepletion;
+
     void Start()
     {
         // Get character controller component from player
@@ -44,9 +47,6 @@ public class PlayerMovement : MonoBehaviour
 
         // Save original move speed
         originalMoveSpeed = moveSpeed;
-
-        // Save original z velocity
-        originalVelZ = vel.z;
     }
 
     void Update()
@@ -167,6 +167,11 @@ public class PlayerMovement : MonoBehaviour
             {
                 // Give them some forward momentum (super sprint)
                 moveSpeed *= 2;
+
+                // Allow resources to deplete faster
+                foodDepletion.sprintIncrease = false;
+                waterDepletion.sprintIncrease = false;
+
             }
         }
     }
