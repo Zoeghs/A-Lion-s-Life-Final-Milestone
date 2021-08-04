@@ -10,8 +10,8 @@ public class PlayerMovement : MonoBehaviour
 
     // Speed of the player
     private float originalMoveSpeed;
-    [SerializeField] float moveSpeed = 6f;
-    [SerializeField] float sprintSpeed = 12f;
+    [HideInInspector] public float moveSpeed = 6f;
+    [HideInInspector] public float sprintSpeed = 12f;
     [HideInInspector] public float currentSpeed;
 
     // Var to store character controller
@@ -165,7 +165,7 @@ public class PlayerMovement : MonoBehaviour
             // If player is also sprinting and has not hit the speed cap
             if (isSprinting == true && moveSpeed < 32)
             {
-                // Give them some forward momentum
+                // Give them some forward momentum (super sprint)
                 moveSpeed *= 2;
             }
         }

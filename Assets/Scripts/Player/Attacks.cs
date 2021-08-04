@@ -17,9 +17,13 @@ public class Attacks : MonoBehaviour
     // Attack visuals
     [SerializeField] Text quickCooldownVis;
 
+    // Player movement sctipt var
+    private PlayerMovement playerMovement;
+
     void Start()
     {
-        
+        // Get movement script
+        playerMovement = gameObject.GetComponent<PlayerMovement>();
     }
 
     void Update()
@@ -34,7 +38,8 @@ public class Attacks : MonoBehaviour
     private void QuickScratch()
     {
         // If the player left clicks and right click is not being held and not on cooldown
-        if (Input.GetKeyDown(KeyCode.Mouse0) && Input.GetKey(KeyCode.Mouse1) == false && quickOnCooldown == false)
+        // Player also cannot be super sprinting to attack
+        if (Input.GetKeyDown(KeyCode.Mouse0) && Input.GetKey(KeyCode.Mouse1) == false && quickOnCooldown == false && playerMovement.moveSpeed <= playerMovement.sprintSpeed)
         {
             // Do a quick scratch
             print("Quick Scratch");
