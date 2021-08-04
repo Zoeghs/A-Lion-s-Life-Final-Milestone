@@ -51,10 +51,14 @@ public class ReplenishResource : MonoBehaviour
         if (isFood == true)
         {
             replenishRate = 0.2f;
+            playerResources.depletionRate = 0.01f;
         }
         else
         {
             replenishRate = 0.4f;
+            playerResources.depletionRate = 0.015f;
+            playerResources.sprintAmount += 0.0005f;
+            playerResources.jumpAmount += 0.0005f;
         }
     }
 

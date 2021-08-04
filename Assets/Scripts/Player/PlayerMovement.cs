@@ -57,8 +57,11 @@ public class PlayerMovement : MonoBehaviour
         // Get x and z axis input
         GetMovementInput();
 
+        // Check if the player has enough resources to sprint
+        bool canSprint = CheckResources();
+
         // Calculate and apply movement
-        MovePlayer();
+        MovePlayer(canSprint);
 
         // Check for jump
         Jump();
@@ -74,7 +77,7 @@ public class PlayerMovement : MonoBehaviour
         z = Input.GetAxis("Vertical");
     }
 
-    private void MovePlayer()
+    private void MovePlayer(bool canSprint)
     {
         // Calculate where to move
         Vector3 move = transform.right * x + transform.forward * z;
@@ -115,8 +118,8 @@ public class PlayerMovement : MonoBehaviour
         currentSpeed = Vector3.Distance(lastPosition, transform.position);
 
 
-        // If the player stops moving
-        if (currentSpeed < 0.01f)
+        // If the player stops moving or does not have enough resources to sprint
+        if (currentSpeed < 0.01f || canSprint == false)
         {
             // Reset the move speed
             moveSpeed = originalMoveSpeed;
@@ -173,6 +176,22 @@ public class PlayerMovement : MonoBehaviour
                 waterDepletion.sprintIncrease = false;
 
             }
+        }
+    }
+
+    private bool CheckResources()
+    {
+        // Check if the player has enough resources to sprint
+        // (Player needs to have enough of one or the other to be able to sprint, if one drops to 0, however, they will start to take damage)
+        if (foodDepletion.amountPercent > foodDepletion.singleResourcePercent * 2 || waterDepletion.amountPercent > waterDepletion.singleResourcePercent * 2)
+        {
+            // Player has enough to sprint
+            return true;
+        }
+        else
+        {
+            // Player does not have enough to sprint
+            return false;
         }
     }
 }

@@ -9,10 +9,12 @@ public class ResourceDepletion : MonoBehaviour
     [SerializeField] Image[] resources;
 
     // Resource nums
-    [SerializeField] float depletionRate;
+    [HideInInspector] public float depletionRate;
     private float originalDepletionRate;
     [HideInInspector] public float currentAmount;
     private float totalAmount;
+    [HideInInspector] public float amountPercent;
+    [HideInInspector] public float singleResourcePercent;
 
     // Colour vars
     private Color originalColour;
@@ -30,8 +32,8 @@ public class ResourceDepletion : MonoBehaviour
 
     // How much to increase depletion rates by
     private float currentSprintAmount;
-    private float sprintAmount = 0.001f;
-    private float jumpAmount = 0.01f;
+    [HideInInspector] public float sprintAmount = 0.001f;
+    [HideInInspector] public float jumpAmount = 0.01f;
 
     void Start()
     {
@@ -73,10 +75,10 @@ public class ResourceDepletion : MonoBehaviour
     private void UpdateVisual()
     {
         // Convert current amount into a %
-        float amountPercent = currentAmount / totalAmount;
+        amountPercent = currentAmount / totalAmount;
 
         // Take the number of the resource and put it under 1 to find out how much percent is one resource worth
-        float singleResourcePercent = 1 / totalAmount;
+        singleResourcePercent = 1 / totalAmount;
 
         // Get how many of the resource icons should be filled in
         float visualRecourceAmount = amountPercent * totalAmount;
