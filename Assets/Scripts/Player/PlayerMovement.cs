@@ -40,6 +40,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] ResourceDepletion foodDepletion;
     [SerializeField] ResourceDepletion waterDepletion;
 
+    // Access to camera & swap script
+    [SerializeField] Camera mainCam;
+    private CameraSwap camSwap;
+
     void Start()
     {
         // Get character controller component from player
@@ -47,6 +51,9 @@ public class PlayerMovement : MonoBehaviour
 
         // Save original move speed
         originalMoveSpeed = moveSpeed;
+
+        // Get camera swap script
+        camSwap = mainCam.GetComponent<CameraSwap>();
     }
 
     void Update()
@@ -82,6 +89,7 @@ public class PlayerMovement : MonoBehaviour
         // Calculate where to move
         Vector3 move = transform.right * x + transform.forward * z;
 
+        #region Sprint Toggle
         // If the player presses the sprinting key (toggle sprint)
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -107,6 +115,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
         }
+        #endregion
 
         // Save position before movement application
         Vector3 lastPosition = transform.position;
@@ -117,7 +126,17 @@ public class PlayerMovement : MonoBehaviour
         // Calculate the current speed the player is moving
         currentSpeed = Vector3.Distance(lastPosition, transform.position);
 
+        #region 3rd Person Mode
+        // If the player is in 3rd person mode & is moving
+        if (camSwap.inThirdPerson == true && currentSpeed > 0)
+        {
+            // Point the player in the direction the camera is facing & the player is moving
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(move), 0.02f);
+            gameObject.transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(new Vector3(mainCam.transform.forward.x, 0, mainCam.transform.forward.z)), 0.02f);
+        }
+        #endregion
 
+        #region Force Stop Sprinting
         // If the player stops moving or does not have enough resources to sprint
         if (currentSpeed < 0.01f || canSprint == false)
         {
@@ -127,6 +146,7 @@ public class PlayerMovement : MonoBehaviour
             // Player is no longer sprinting
             isSprinting = false;
         }
+        #endregion
     }
 
     private void ApplyGravity()
@@ -157,7 +177,7 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         // If jump key is pressed and player is grounded
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButton("Jump") && isGrounded)
         {
             // Player jumps
             vel.y = Mathf.Sqrt(jumpHeight * -2f * grav);
