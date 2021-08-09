@@ -15,7 +15,7 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public float currentSpeed;
 
     // Var to store character controller
-    private CharacterController playerCont;
+    private Rigidbody playerRb;
 
     // Player's velocity
     private Vector3 vel;
@@ -46,8 +46,8 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        // Get character controller component from player
-        playerCont = gameObject.GetComponent<CharacterController>();
+        // Get rigidbody component from player
+        playerRb = gameObject.GetComponent<Rigidbody>();
 
         // Save original move speed
         originalMoveSpeed = moveSpeed;
@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
         camSwap = mainCam.GetComponent<CameraSwap>();
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         // Check if player is grounded
         GroundCheck();
@@ -77,6 +77,11 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
     }
 
+    void Update()
+    {
+
+    }
+
     private void GetMovementInput()
     {
         // Get x and z axis input
@@ -87,14 +92,14 @@ public class PlayerMovement : MonoBehaviour
     private void MovePlayer(bool canSprint)
     {
         // Calculate where to move
-        Vector3 move = transform.right * x + transform.forward * z;
+        Vector3 move = playerRb.transform.right * x + playerRb.transform.forward * z;
 
         #region Sprint Toggle
         // If the player presses the sprinting key (toggle sprint)
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             // If the player is currently not sprinting
-            if (moveSpeed == originalMoveSpeed)
+            if (moveSpeed >= originalMoveSpeed && moveSpeed < sprintSpeed)
             {
                 // Change the move speed to the sprint speed
                 moveSpeed = sprintSpeed;
@@ -104,7 +109,7 @@ public class PlayerMovement : MonoBehaviour
 
             }
             // If the player is currently sprinting
-            else if (moveSpeed == sprintSpeed)
+            else if (moveSpeed >= sprintSpeed)
             {
                 // Reset the move speed
                 moveSpeed = originalMoveSpeed;
@@ -113,18 +118,15 @@ public class PlayerMovement : MonoBehaviour
                 isSprinting = false;
 
             }
-
         }
         #endregion
 
-        // Save position before movement application
-        Vector3 lastPosition = transform.position;
-
         // Apply movement based on input
-        playerCont.Move(move * moveSpeed * Time.deltaTime);
+        playerRb.velocity = move * moveSpeed;
+
 
         // Calculate the current speed the player is moving
-        currentSpeed = Vector3.Distance(lastPosition, transform.position);
+        currentSpeed = playerRb.velocity.magnitude;
 
         #region 3rd Person Mode
         // If the player is in 3rd person mode & is moving
@@ -154,8 +156,8 @@ public class PlayerMovement : MonoBehaviour
         // Add gravity to velocity
         vel.y += grav * Time.deltaTime;
 
-        // Apply to character controller
-        playerCont.Move(vel * Time.deltaTime);
+        // Apply to rigidbody
+        playerRb.velocity = new Vector3(playerRb.velocity.x, vel.y, playerRb.velocity.z);
     }
 
     private void GroundCheck()
@@ -188,6 +190,9 @@ public class PlayerMovement : MonoBehaviour
             // If player is also sprinting and has not hit the speed cap
             if (isSprinting == true && moveSpeed < 32)
             {
+                // Give player a forward boost (lunge)
+                playerRb.AddForce(transform.forward * 2, ForceMode.Impulse);
+
                 // Give them some forward momentum (super sprint)
                 moveSpeed *= 2;
 

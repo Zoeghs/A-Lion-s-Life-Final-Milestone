@@ -16,6 +16,7 @@ public class PlayerLook : MonoBehaviour
 
     // Var for player transform
     [SerializeField] Transform playerTransform;
+    [SerializeField] Rigidbody playerRb;
 
     // Var for locking looking
     public bool allowLooking = true;
@@ -38,7 +39,7 @@ public class PlayerLook : MonoBehaviour
             RotateCamera();
 
             // Rotate player when looking side to side
-            playerTransform.transform.Rotate(Vector3.up * mouseX);
+            playerRb.transform.Rotate(Vector3.up * mouseX);
         }
     }
 
