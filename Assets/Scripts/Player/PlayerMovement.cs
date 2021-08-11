@@ -10,9 +10,10 @@ public class PlayerMovement : MonoBehaviour
 
     // Speed of the player
     private float originalMoveSpeed;
-    [HideInInspector] public float moveSpeed = 6f;
+    [HideInInspector] public float moveSpeed = 8f;
     [HideInInspector] public float sprintSpeed = 12f;
     [HideInInspector] public float currentSpeed;
+    private float maxSpeed;
 
     // Var to store character controller
     private Rigidbody playerRb;
@@ -52,8 +53,11 @@ public class PlayerMovement : MonoBehaviour
         // Save original move speed
         originalMoveSpeed = moveSpeed;
 
-        // Get camera swap script
-        camSwap = mainCam.GetComponent<CameraSwap>();
+        // Set max speed
+        maxSpeed = (sprintSpeed * 2) * 2;
+
+    // Get camera swap script
+    camSwap = mainCam.GetComponent<CameraSwap>();
     }
 
     private void FixedUpdate()
@@ -140,7 +144,7 @@ public class PlayerMovement : MonoBehaviour
 
         #region Force Stop Sprinting
         // If the player stops moving or does not have enough resources to sprint
-        if (currentSpeed < 0.01f || canSprint == false)
+        if (currentSpeed < 0.05f || canSprint == false)
         {
             // Reset the move speed
             moveSpeed = originalMoveSpeed;
@@ -188,7 +192,7 @@ public class PlayerMovement : MonoBehaviour
             isJumping = true;
 
             // If player is also sprinting and has not hit the speed cap
-            if (isSprinting == true && moveSpeed < 32)
+            if (isSprinting == true && moveSpeed < maxSpeed)
             {
                 // Give player a forward boost (lunge)
                 playerRb.AddForce(transform.forward * 2, ForceMode.Impulse);
@@ -208,7 +212,7 @@ public class PlayerMovement : MonoBehaviour
     {
         // Check if the player has enough resources to sprint
         // (Player needs to have enough of one or the other to be able to sprint, if one drops to 0, however, they will start to take damage)
-        if (foodDepletion.amountPercent > foodDepletion.singleResourcePercent * 2 || waterDepletion.amountPercent > waterDepletion.singleResourcePercent * 2)
+        if (foodDepletion.amountPercent > foodDepletion.singleResourcePercent * 4 || waterDepletion.amountPercent > waterDepletion.singleResourcePercent * 4)
         {
             // Player has enough to sprint
             return true;

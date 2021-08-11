@@ -6,18 +6,18 @@ using UnityEngine.UI;
 public class ResourceDepletion : MonoBehaviour
 {
     // Array of recource to deplete (UI Images)
-    [SerializeField] Image[] resources;
+    public Image[] resources;
 
     // Resource nums
     [HideInInspector] public float depletionRate;
     private float originalDepletionRate;
     [HideInInspector] public float currentAmount;
-    private float totalAmount;
+    [HideInInspector] public float totalAmount;
     [HideInInspector] public float amountPercent;
     [HideInInspector] public float singleResourcePercent;
 
     // Colour vars
-    private Color originalColour;
+    [HideInInspector] public Color originalColour;
     private Color depletedColour = Color.black;
 
     // Access to player movement script

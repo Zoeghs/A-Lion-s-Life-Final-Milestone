@@ -26,6 +26,9 @@ public class PlayerHealth : MonoBehaviour
     private Color originalColour;
     private Color depletedColour = Color.black;
 
+    // Regen vars
+    private float regenAmount = 0.5f;
+
     void Start()
     {
         // Set current and total health
@@ -40,6 +43,9 @@ public class PlayerHealth : MonoBehaviour
     {
         // Check for resource damage
         ResourceDamage();
+
+        // Check for regen
+        Regen();
     }
 
     private void TakeDamage(float amount, bool overTime)
@@ -143,6 +149,28 @@ public class PlayerHealth : MonoBehaviour
         {
             // Player takes resource damage over time
             TakeDamage(resourceDamage, true);
+        }
+    }
+
+    private void Regen()
+    {
+        // If resource meters are both full visually and the player's health bar is not full
+        if (foodDepletion.resources[(int)foodDepletion.totalAmount - 1].color == foodDepletion.originalColour && waterDepletion.resources[(int)waterDepletion.totalAmount - 1].color == waterDepletion.originalColour && currentHealth < totalHealth)
+        {
+            // Regen health over time
+            currentHealth += regenAmount * Time.deltaTime;
+
+            // Health has increased
+            hasIncreased = true;
+
+            // Update visual
+            UpdateDamageVisual();
+        }
+        // If resource meters are not both full
+        else
+        {
+            // Health is not increasing
+            hasIncreased = false;
         }
     }
 }
