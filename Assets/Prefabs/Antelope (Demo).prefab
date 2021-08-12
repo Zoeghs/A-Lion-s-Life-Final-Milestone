@@ -753,7 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda5d94e0ae38a74aa3a1e9728a91016, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  takeDamage: {fileID: 0}
+  takeDamage: {fileID: 5886027784969502199}
   playerAttacks: {fileID: 0}
   healthPoints:
   - {fileID: 6129853025073721184}
@@ -867,9 +867,11 @@ GameObject:
   - component: {fileID: 5075216706407571791}
   - component: {fileID: 5886027784969502199}
   - component: {fileID: 5886027784969502152}
+  - component: {fileID: 7504604632471967562}
+  - component: {fileID: 1712716547301820997}
   m_Layer: 0
   m_Name: Antelope (Demo)
-  m_TagString: Untagged
+  m_TagString: Prey
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -881,14 +883,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6732378709902393498}
-  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalRotation: {x: -0.7069834, y: 0, z: 0, w: 0.7072302}
   m_LocalPosition: {x: 10, y: -0.3, z: -32}
   m_LocalScale: {x: 52.797466, y: 51.194183, z: 51.892635}
   m_Children:
   - {fileID: 5886027784064043305}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: 0}
 --- !u!33 &7028498327542814085
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -974,6 +976,42 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0005285795, y: -2.3283062e-10}
   m_Size: {x: 0.023675378, y: 0.009766732}
   m_Direction: 0
+--- !u!195 &7504604632471967562
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6732378709902393498}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.01130911
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 0.009766732
+  m_BaseOffset: 0.004883366
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &1712716547301820997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6732378709902393498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9449a1ebb7106f34587f9b2ee643c5b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fleeFromPlayer: 1
+  fleeFromPredators: 1
 --- !u!1 &6808301372418061928
 GameObject:
   m_ObjectHideFlags: 0

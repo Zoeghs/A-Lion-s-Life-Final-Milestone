@@ -35,6 +35,7 @@ public class Attacks : MonoBehaviour
         Cooldown();
     }
 
+    #region Quick Scratch
     private void QuickScratch()
     {
         // If the player left clicks and right click is not being held and not on cooldown
@@ -70,4 +71,45 @@ public class Attacks : MonoBehaviour
             quickOnCooldown = false;
         }
     }
+    #endregion
+
+    #region Pounce
+    private void Sneak()
+    {
+        // When the player is holding right click
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            // Slow down move speed
+
+            // Lock sprinting
+
+            // Turn on pounce UI
+
+            // Change FOV to zoom/focus in
+        }
+
+        // Check for charge up
+        ChargeUp();
+    }
+
+    private void ChargeUp()
+    {
+        // If the player is holding left click
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            // Move guages up and down the charge bar
+        }
+        // If the player releases left click
+        else if (Input.GetKeyUp(KeyCode.Mouse0))
+        {
+            // Pounce at the force specified by the charge up
+            Pounce();
+        }
+    }
+
+    private void Pounce()
+    {
+
+    }
+    #endregion
 }
