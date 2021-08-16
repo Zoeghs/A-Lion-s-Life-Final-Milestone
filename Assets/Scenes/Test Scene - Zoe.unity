@@ -710,7 +710,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1755267826}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &507753253
+--- !u!114 &507753258
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1981,7 +1981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1264130758
 RectTransform:
   m_ObjectHideFlags: 0
