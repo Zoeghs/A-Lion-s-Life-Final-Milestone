@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Attacks : MonoBehaviour
+public class PlayerAttacks : MonoBehaviour
 {
     // Access to camera
     [SerializeField] Camera mainCamera;
+
+    // Camera FOV
+    private float originalFOV;
 
     // Cooldown times for attacks (seconds)
     private float quickScratchCooldown = 0f;
@@ -20,10 +23,26 @@ public class Attacks : MonoBehaviour
     // Player movement sctipt var
     private PlayerMovement playerMovement;
 
+    // Pounce UI
+    [SerializeField] GameObject pounceUI;
+
+    // Access to Slide script
+    [SerializeField] Slide leftSlide;
+    [SerializeField] Slide rightSlide;
+
+    // Direction empty based off camera
+    [SerializeField] Transform directionEmpty;
+
     void Start()
     {
         // Get movement script
         playerMovement = gameObject.GetComponent<PlayerMovement>();
+
+        // Turn pounce UI off by default
+        pounceUI.SetActive(false);
+
+        // Save original FOV
+        originalFOV = mainCamera.fieldOfView;
     }
 
     void Update()
@@ -33,6 +52,9 @@ public class Attacks : MonoBehaviour
 
         // Check for quick scratch cooldown
         Cooldown();
+
+        // Check for sneaking (pounce preparation)
+        Sneak();
     }
 
     #region Quick Scratch
@@ -80,27 +102,41 @@ public class Attacks : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
             // Slow down move speed
+            playerMovement.moveSpeed = 4f;
 
-            // Lock sprinting
+            // Lock sprinting & jumping
+            playerMovement.sprintLocked = true;
+            playerMovement.jumpLocked = true;
 
             // Turn on pounce UI
+            pounceUI.SetActive(true);
 
             // Change FOV to zoom/focus in
+            mainCamera.fieldOfView = 20f;
         }
-
-        // Check for charge up
-        ChargeUp();
-    }
-
-    private void ChargeUp()
-    {
-        // If the player is holding left click
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        // When the player is no longer holding right click
+        else if (Input.GetKeyUp(KeyCode.Mouse1))
         {
-            // Move guages up and down the charge bar
+            // Restore move speed
+            playerMovement.moveSpeed = playerMovement.originalMoveSpeed;
+
+            // Unlock sprinting & jumping
+            playerMovement.sprintLocked = false;
+            playerMovement.jumpLocked = false;
+
+            // Turn off pounce UI
+            pounceUI.SetActive(false);
+
+            // Reset t (time) in Slide script
+            leftSlide.t = 0;
+            rightSlide.t = 0;
+
+            // Restore FOV
+            mainCamera.fieldOfView = originalFOV;
         }
-        // If the player releases left click
-        else if (Input.GetKeyUp(KeyCode.Mouse0))
+
+        // If the player is holding down right click & releases left click
+        if (Input.GetKey(KeyCode.Mouse1) && Input.GetKeyUp(KeyCode.Mouse0))
         {
             // Pounce at the force specified by the charge up
             Pounce();
@@ -109,7 +145,17 @@ public class Attacks : MonoBehaviour
 
     private void Pounce()
     {
+        // Get player rigidbody
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
 
+        // Find Direction to launce player (based on where the player is looking)
+        Vector3 pounceDir = directionEmpty.position - gameObject.transform.position;
+
+        // Calculate the force the player will pounce based off the guage (t, time decimal)
+        float force = leftSlide.t * 100f;
+
+        // Lunge or pounce forward
+        rb.AddForce(pounceDir * force, ForceMode.Impulse);
     }
     #endregion
 }

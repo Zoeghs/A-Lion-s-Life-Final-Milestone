@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class Slide : MonoBehaviour
 {
-    public float t = 0f;
+    [HideInInspector] public float t = 0f;
     public SplineManager spline;
 
     // Direction bool
@@ -50,17 +50,23 @@ public class Slide : MonoBehaviour
             // Increase time to move toawrds the end of the spline
             movePositive = true;
         }
+        // If this object is not active
+        else if (gameObject.activeSelf == false)
+        {
+            // Reset time
+            t = 0;
+        }
     }
 
     private void MoveTime()
     {
-        // If the object needs to move in a positive direction
-        if (movePositive == true)
+        // If the object needs to move in a positive direction and left click is held
+        if (movePositive == true && Input.GetKey(KeyCode.Mouse0))
         {
             t += Time.deltaTime / speedDivisor;
         }
-        // If the object needs to move in a negative direction
-        else
+        // If the object needs to move in a negative direction and left click is held
+        else if (movePositive == false && Input.GetKey(KeyCode.Mouse0))
         {
             t -= Time.deltaTime / speedDivisor;
         }

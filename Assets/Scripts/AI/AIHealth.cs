@@ -7,7 +7,7 @@ public class AIHealth : MonoBehaviour
 {
     // Access to other scripts
     [SerializeField] AITakeDamage takeDamage;
-    [SerializeField] Attacks playerAttacks;
+    [SerializeField] PlayerAttacks playerAttacks;
 
     // Array of health to deplete (UI Images)
     [SerializeField] Image[] healthPoints;

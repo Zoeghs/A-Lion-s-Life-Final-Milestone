@@ -10,7 +10,7 @@ public class AITakeDamage : MonoBehaviour
 
     // Access to player game object and components
     [SerializeField] GameObject player;
-    private Attacks playerAttacks;
+    private PlayerAttacks playerAttacks;
 
     // Hit detection bool
     [HideInInspector] public bool isHit = false;
@@ -34,7 +34,7 @@ public class AITakeDamage : MonoBehaviour
         hitFour.enabled = false;
 
         // Get attack script off of player
-        playerAttacks = player.GetComponent<Attacks>();
+        playerAttacks = player.GetComponent<PlayerAttacks>();
 
         originalTime = timer;
     }

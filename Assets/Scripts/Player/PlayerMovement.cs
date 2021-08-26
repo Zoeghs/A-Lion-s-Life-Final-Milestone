@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    #region Variables
+
     // Vars for key inputs
     private float x;
     private float z;
 
     // Speed of the player
-    private float originalMoveSpeed;
+    [HideInInspector] public float originalMoveSpeed;
     [HideInInspector] public float moveSpeed = 8f;
     [HideInInspector] public float sprintSpeed = 12f;
     [HideInInspector] public float currentSpeed;
@@ -37,6 +39,10 @@ public class PlayerMovement : MonoBehaviour
     [HideInInspector] public bool isSprinting = false;
     [HideInInspector] public bool isJumping = false;
 
+    // Sprint & jump locks
+    [HideInInspector] public bool sprintLocked = false;
+    [HideInInspector] public bool jumpLocked = false;
+
     // Access to resource depletion scripts
     [SerializeField] ResourceDepletion foodDepletion;
     [SerializeField] ResourceDepletion waterDepletion;
@@ -44,6 +50,8 @@ public class PlayerMovement : MonoBehaviour
     // Access to camera & swap script
     [SerializeField] Camera mainCam;
     private CameraSwap camSwap;
+
+    #endregion
 
     void Start()
     {
@@ -56,8 +64,8 @@ public class PlayerMovement : MonoBehaviour
         // Set max speed
         maxSpeed = (sprintSpeed * 2) * 2;
 
-    // Get camera swap script
-    camSwap = mainCam.GetComponent<CameraSwap>();
+        // Get camera swap script
+        camSwap = mainCam.GetComponent<CameraSwap>();
     }
 
     private void FixedUpdate()
@@ -81,11 +89,6 @@ public class PlayerMovement : MonoBehaviour
         ApplyGravity();
     }
 
-    void Update()
-    {
-
-    }
-
     private void GetMovementInput()
     {
         // Get x and z axis input
@@ -99,8 +102,8 @@ public class PlayerMovement : MonoBehaviour
         Vector3 move = playerRb.transform.right * x + playerRb.transform.forward * z;
 
         #region Sprint Toggle
-        // If the player presses the sprinting key (toggle sprint)
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        // If the player presses the sprinting key (toggle sprint) and sprinting is not locked
+        if (Input.GetKeyDown(KeyCode.LeftShift) && sprintLocked == false)
         {
             // If the player is currently not sprinting
             if (moveSpeed >= originalMoveSpeed && moveSpeed < sprintSpeed)
@@ -182,8 +185,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        // If jump key is pressed and player is grounded
-        if (Input.GetButton("Jump") && isGrounded)
+        // If jump key is pressed, player is grounded and jump is not locked
+        if (Input.GetButton("Jump") && isGrounded && jumpLocked == false)
         {
             // Player jumps
             vel.y = Mathf.Sqrt(jumpHeight * -2f * grav);
