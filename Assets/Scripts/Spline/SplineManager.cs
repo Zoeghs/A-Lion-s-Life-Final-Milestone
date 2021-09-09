@@ -11,9 +11,9 @@ public class SplineManager : MonoBehaviour
 
     private List<PiecewiseCubic> pieces = new List<PiecewiseCubic>();
 
-    [SerializeField] GameObject prevR;
+    //[SerializeField] GameObject prevR;
 
-    [SerializeField] LineRenderer renderer;
+    //[SerializeField] LineRenderer renderer;
 
     void Start()
     {

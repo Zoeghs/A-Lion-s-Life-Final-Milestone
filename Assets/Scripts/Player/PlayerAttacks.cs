@@ -33,6 +33,9 @@ public class PlayerAttacks : MonoBehaviour
     // Direction empty based off camera
     [SerializeField] Transform directionEmpty;
 
+    // Bool for allowing pounce to function
+    private bool canPounce = true;
+
     void Start()
     {
         // Get movement script
@@ -99,7 +102,7 @@ public class PlayerAttacks : MonoBehaviour
     private void Sneak()
     {
         // When the player is holding right click
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (Input.GetKeyDown(KeyCode.Mouse1) && canPounce == true)
         {
             // Slow down move speed
             playerMovement.moveSpeed = 4f;
@@ -133,10 +136,14 @@ public class PlayerAttacks : MonoBehaviour
 
             // Restore FOV
             mainCamera.fieldOfView = originalFOV;
+
+            // Allow right click to be re-activated
+            canPounce = true;
+
         }
 
         // If the player is holding down right click & releases left click
-        if (Input.GetKey(KeyCode.Mouse1) && Input.GetKeyUp(KeyCode.Mouse0))
+        if (Input.GetKey(KeyCode.Mouse1) && Input.GetKeyUp(KeyCode.Mouse0) && canPounce == true)
         {
             // Pounce at the force specified by the charge up
             Pounce();
@@ -156,6 +163,15 @@ public class PlayerAttacks : MonoBehaviour
 
         // Lunge or pounce forward
         rb.AddForce(pounceDir * force, ForceMode.Impulse);
+
+        // Close pounce UI
+        pounceUI.SetActive(false);
+
+        // Restore FOV
+        mainCamera.fieldOfView = originalFOV;
+
+        // Player cannot pounce again until releasing the right mouse button
+        canPounce = false;
     }
     #endregion
 }

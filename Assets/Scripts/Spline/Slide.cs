@@ -50,8 +50,9 @@ public class Slide : MonoBehaviour
             // Increase time to move toawrds the end of the spline
             movePositive = true;
         }
+
         // If this object is not active
-        else if (gameObject.activeSelf == false)
+        if (gameObject.activeSelf == false)
         {
             // Reset time
             t = 0;

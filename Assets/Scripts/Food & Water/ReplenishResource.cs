@@ -16,9 +16,10 @@ public class ReplenishResource : MonoBehaviour
     // Pivot to scale bar foreground
     [SerializeField] Transform barFGPivot;
 
-    // Percentage vars
-    private float totalPercentage = 1f;
-    private float currentPercentage = 0f;
+    // Percentage vars (total and current have been reversed becasue the foreground (black) needs to shrink rather than grow)
+    private float totalPercentage = 0f;
+    private float currentPercentage = 1f;
+    private float originalCurrent;
     private float replenishRate;
 
     // Toggle to determine if the node is food or water (true for food false for water)
@@ -44,8 +45,11 @@ public class ReplenishResource : MonoBehaviour
         // Turn off progress bar
         EnableToggleBar(false);
 
+        // Save current percentage
+        originalCurrent = currentPercentage;
+
         // Set progress bar scale to 0%
-        barFGPivot.localScale = new Vector3 (currentPercentage, barFGPivot.localScale.y, barFGPivot.localScale.z);
+        //barFGPivot.localScale = new Vector3 (currentPercentage, barFGPivot.localScale.y, barFGPivot.localScale.z);
 
         // Set correct rates depending on the type of node
         if (isFood == true)
@@ -125,7 +129,7 @@ public class ReplenishResource : MonoBehaviour
     private void Replenish()
     {
         // If the scale hits the total percentage
-        if (currentPercentage >= totalPercentage)
+        if (currentPercentage <= totalPercentage)
         {
             // Add resource to desired resource bar
             playerResources.currentAmount += restorationAmount;
@@ -154,7 +158,10 @@ public class ReplenishResource : MonoBehaviour
             EnableToggleBar(true);
 
             // Add progress
-            currentPercentage += replenishRate * Time.deltaTime;
+            //currentPercentage += replenishRate * Time.deltaTime;
+
+            // Subtract progress (decreases to reveal the bar behind, done in reverse with black/empty space as the foreground)
+            currentPercentage -= replenishRate * Time.deltaTime;
 
             // Scale progress bar
             barFGPivot.localScale = new Vector3(currentPercentage, barFGPivot.localScale.y, barFGPivot.localScale.z);
@@ -167,7 +174,7 @@ public class ReplenishResource : MonoBehaviour
         barFGPivot.localScale = new Vector3(0, barFGPivot.localScale.y, barFGPivot.localScale.z);
 
         // Reset current percentage
-        currentPercentage = 0f;
+        currentPercentage = originalCurrent;
     }
 
     private void EnableTogglePrompt(bool toggle)
