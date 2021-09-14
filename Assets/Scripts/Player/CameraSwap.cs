@@ -11,6 +11,9 @@ public class CameraSwap : MonoBehaviour
     // Bool for mode detection
     [HideInInspector] public bool inThirdPerson = false;
 
+    // Lock for third person mode (for playtesting purposes)
+    [SerializeField] bool canThridPerson = true;
+
     void Start()
     {
         // Set main camera defaults
@@ -20,7 +23,7 @@ public class CameraSwap : MonoBehaviour
     void Update()
     {
         // If player presses F5 and is not already in third person
-        if (Input.GetKeyDown(KeyCode.F5) && inThirdPerson == false)
+        if (Input.GetKeyDown(KeyCode.F5) && inThirdPerson == false && canThridPerson == true)
         {
             // Swap to 3rd person camera
             SwapToThird();

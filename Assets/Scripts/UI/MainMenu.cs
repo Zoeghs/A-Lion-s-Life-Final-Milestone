@@ -45,7 +45,7 @@ public class MainMenu : MonoBehaviour
     public void PlayGame()
     {
         // Load game scene
-        SceneManager.LoadScene("Demo");
+        SceneManager.LoadScene("Test Terrain Scene - Ash");
     }
 
     public void ExitGame()
