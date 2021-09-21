@@ -66,8 +66,14 @@ public class Flee : MonoBehaviour
         GameObject toFleeFrom = GameObject.FindGameObjectWithTag(distanceTag);
 
         // Calculate distance
-        float distance = Vector3.Distance(gameObject.transform.position, toFleeFrom.transform.position);
+        if (toFleeFrom != null)
+        {
+            float distance = Vector3.Distance(gameObject.transform.position, toFleeFrom.transform.position);
+            return distance;
+        }
 
-        return distance;
+        // Returns distance that is our of range for fleeing if there is no predator in the scene
+        return 100;
+
     }
 }
