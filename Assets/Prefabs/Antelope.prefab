@@ -134,6 +134,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5886027784064043477, guid: b03d7ee2db8dda0448fc4a13f9ef9a5f,
         type: 3}
+      propertyPath: foodPrefab
+      value: 
+      objectReference: {fileID: 6108068416034802300, guid: a2394dfaf1ed16948b66d350e87659f9,
+        type: 3}
+    - target: {fileID: 5886027784064043477, guid: b03d7ee2db8dda0448fc4a13f9ef9a5f,
+        type: 3}
       propertyPath: playerAttacks
       value: 
       objectReference: {fileID: 0}

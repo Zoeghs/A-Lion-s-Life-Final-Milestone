@@ -24,6 +24,9 @@ public class AIHealth : MonoBehaviour
     // Damage nums: How much damage each attack does
     private float quickScratchDamage = 1f;
 
+    // Prefab to turn AI into a food node when it dies
+    [SerializeField] GameObject foodPrefab;
+
     void Start()
     {
         // Set full resource amounts and original colour
@@ -52,7 +55,11 @@ public class AIHealth : MonoBehaviour
                 // Clamp to 0
                 currentAmount = 0;
 
-                // vv Add death code in here vv
+                // AI 'turns into' a food node when it dies
+                Instantiate(foodPrefab, gameObject.transform);
+
+                // Destroy the AI at the highest parent level
+                Destroy(gameObject.transform.parent.transform.parent.gameObject);
             }
 
             // Save prevoius amount to new current amount
