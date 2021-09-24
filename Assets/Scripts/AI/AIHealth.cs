@@ -23,9 +23,13 @@ public class AIHealth : MonoBehaviour
 
     // Damage nums: How much damage each attack does
     private float quickScratchDamage = 1f;
+    private float pounceDamage = 5f;
 
     // Prefab to turn AI into a food node when it dies
     [SerializeField] GameObject foodPrefab;
+
+    // Collider to detect if the players pounce hit the AI
+    [SerializeField] SphereCollider pounceCollider;
 
     void Start()
     {
@@ -38,42 +42,52 @@ public class AIHealth : MonoBehaviour
 
     void Update()
     {
-        // Check for damage taken
-        TakeDamage();
+        // If the object has been hit
+        if (takeDamage.isHit == true && playerAttacks.quickOnCooldown == false)
+        {
+            // Check for damage taken from quick attack
+            TakeDamage(quickScratchDamage);
+        }
     }
 
-    private void TakeDamage()
+    private void TakeDamage(float damageAmount)
     {
-        // If the object has been hit
-        if(takeDamage.isHit == true && playerAttacks.quickOnCooldown == false)
+        currentAmount -= damageAmount;
+
+        // Only deplete health if above 0
+        if (currentAmount < 0)
         {
-            currentAmount -= quickScratchDamage;
+            // Clamp to 0
+            currentAmount = 0;
 
-            // Only deplete health if above 0
-            if (currentAmount < 0)
-            {
-                // Clamp to 0
-                currentAmount = 0;
+            // AI 'turns into' a food node when it dies
+            Instantiate(foodPrefab, gameObject.transform);
 
-                // AI 'turns into' a food node when it dies
-                Instantiate(foodPrefab, gameObject.transform);
-
-                // Destroy the AI at the highest parent level
-                Destroy(gameObject.transform.parent.transform.parent.gameObject);
-            }
-
-            // Save prevoius amount to new current amount
-            previousAmount = currentAmount;
-
-            // Update health visuals
-            UpdateDamageVisual();
-
-            takeDamage.OnMouseUp();
+            // Destroy the AI at the highest parent level
+            Destroy(gameObject.transform.parent.transform.parent.gameObject);
         }
+
+        // Save prevoius amount to new current amount
+        previousAmount = currentAmount;
+
+        // Update health visuals
+        UpdateDamageVisual();
+
+        takeDamage.OnMouseUp();
     }
 
     private void UpdateDamageVisual()
     {
         healthPoints[(int)currentAmount].color = depletedColour;
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        // If the AI enters the pounce collider
+        if (collision.gameObject.name == "Pounce Collider")
+        {
+            // AI takes damage from the pounce attack
+            TakeDamage(pounceDamage);
+        }
     }
 }

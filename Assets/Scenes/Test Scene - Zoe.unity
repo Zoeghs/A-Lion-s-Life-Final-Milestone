@@ -1376,6 +1376,12 @@ Transform:
   m_Father: {fileID: 971785961}
   m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &1075715770 stripped
+SphereCollider:
+  m_CorrespondingSourceObject: {fileID: 1075715770, guid: bec21d007034c3445a744424ca8ffac2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1755267826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1209736157
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,18 +1672,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 293367534, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2046398780, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 2046398780, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -0
-      objectReference: {fileID: 0}
     - target: {fileID: 8846379199170649218, guid: bec21d007034c3445a744424ca8ffac2,
         type: 3}
       propertyPath: m_Name
@@ -2248,11 +2242,16 @@ PrefabInstance:
       propertyPath: hitThree
       value: 
       objectReference: {fileID: 412905754}
-    - target: {fileID: 9017383715011262440, guid: df83e60fd9448db4c87593224cfc2eab,
+    - target: {fileID: 8646927335901246072, guid: df83e60fd9448db4c87593224cfc2eab,
         type: 3}
       propertyPath: playerAttacks
       value: 
       objectReference: {fileID: 1812375728}
+    - target: {fileID: 8646927335901246072, guid: df83e60fd9448db4c87593224cfc2eab,
+        type: 3}
+      propertyPath: pounceCollider
+      value: 
+      objectReference: {fileID: 1075715770}
     - target: {fileID: 9017383715011262441, guid: df83e60fd9448db4c87593224cfc2eab,
         type: 3}
       propertyPath: mainCamera

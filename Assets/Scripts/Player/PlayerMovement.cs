@@ -51,6 +51,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Camera mainCam;
     private CameraSwap camSwap;
 
+    // Collider to detect if the pounce hit anything
+    [SerializeField] SphereCollider pounceCollider;
+
     #endregion
 
     void Start()
@@ -180,6 +183,9 @@ public class PlayerMovement : MonoBehaviour
 
             // Player is no longer jumping
             isJumping = false;
+
+            // Turn off pounce collider
+            pounceCollider.enabled = false;
         }
     }
 

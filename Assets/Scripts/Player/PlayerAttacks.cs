@@ -36,6 +36,9 @@ public class PlayerAttacks : MonoBehaviour
     // Bool for allowing pounce to function
     private bool canPounce = true;
 
+    // Collider to detect if the pounce hit anything
+    [SerializeField] SphereCollider pounceCollider;
+
     void Start()
     {
         // Get movement script
@@ -46,6 +49,9 @@ public class PlayerAttacks : MonoBehaviour
 
         // Save original FOV
         originalFOV = mainCamera.fieldOfView;
+
+        // Turn off pounce collider
+        pounceCollider.enabled = false;
     }
 
     void Update()
@@ -163,6 +169,9 @@ public class PlayerAttacks : MonoBehaviour
 
         // Lunge or pounce forward
         rb.AddForce(pounceDir * force, ForceMode.Impulse);
+
+        // Turn on pounce collider
+        pounceCollider.enabled = true;
 
         // Close pounce UI
         pounceUI.SetActive(false);
