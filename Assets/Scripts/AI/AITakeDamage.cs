@@ -47,8 +47,6 @@ public class AITakeDamage : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //print(Vector3.Distance(player.transform.position, gameObject.transform.position));
-
         // When object is clicked and is within distance
         if (Vector3.Distance(player.transform.position, gameObject.transform.position) <= attackDistance && isHit == false)
         {
@@ -65,6 +63,8 @@ public class AITakeDamage : MonoBehaviour
 
     public void OnMouseUp()
     {
+        print("mouse up");
+
         // The object is no longer being hit
         isHit = false;
     }

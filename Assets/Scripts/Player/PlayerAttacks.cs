@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerAttacks : MonoBehaviour
 {
+    #region Variables
+
     // Access to camera
     [SerializeField] Camera mainCamera;
 
@@ -38,6 +40,8 @@ public class PlayerAttacks : MonoBehaviour
 
     // Collider to detect if the pounce hit anything
     [SerializeField] SphereCollider pounceCollider;
+
+    #endregion
 
     void Start()
     {
@@ -166,6 +170,9 @@ public class PlayerAttacks : MonoBehaviour
 
         // Calculate the force the player will pounce based off the guage (t, time decimal)
         float force = leftSlide.t * 100f;
+
+        // Stop Updating player vel
+        playerMovement.velUpdateLocked = true;
 
         // Lunge or pounce forward
         rb.AddForce(pounceDir * force, ForceMode.Impulse);

@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
     // Sprint & jump locks
     [HideInInspector] public bool sprintLocked = false;
     [HideInInspector] public bool jumpLocked = false;
+    [HideInInspector] public bool velUpdateLocked = false;
 
     // Access to resource depletion scripts
     [SerializeField] ResourceDepletion foodDepletion;
@@ -131,8 +132,12 @@ public class PlayerMovement : MonoBehaviour
         }
         #endregion
 
-        // Apply movement based on input
-        playerRb.velocity = move * moveSpeed;
+        // If the update vel bool is not locked (the player is not pouncing)
+        if (velUpdateLocked == false)
+        {
+            // Apply movement based on input
+            playerRb.velocity = move * moveSpeed;
+        }
 
 
         // Calculate the current speed the player is moving
@@ -186,6 +191,9 @@ public class PlayerMovement : MonoBehaviour
 
             // Turn off pounce collider
             pounceCollider.enabled = false;
+
+            // Sart Updating player vel again
+            velUpdateLocked = false;
         }
     }
 
