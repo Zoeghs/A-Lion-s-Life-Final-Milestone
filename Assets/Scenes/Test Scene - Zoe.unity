@@ -451,6 +451,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!82 &434645783 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 434645783, guid: bec21d007034c3445a744424ca8ffac2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1755267826}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &517214513 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 517214513, guid: bec21d007034c3445a744424ca8ffac2,
+    type: 3}
+  m_PrefabInstance: {fileID: 1755267826}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &534431877
 GameObject:
   m_ObjectHideFlags: 0
@@ -1506,13 +1518,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 1e2d7d9bdbce2fb47ab87c825589935e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 150
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -1799,16 +1811,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 591251906792210307, guid: bec21d007034c3445a744424ca8ffac2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8846379197893874339, guid: bec21d007034c3445a744424ca8ffac2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8846379199170649218, guid: bec21d007034c3445a744424ca8ffac2,
         type: 3}
       propertyPath: m_Name
@@ -2475,6 +2477,16 @@ PrefabInstance:
       objectReference: {fileID: 1812375725}
     - target: {fileID: 6667713633875343014, guid: b6e68df5dede1174eaddb66a90de363c,
         type: 3}
+      propertyPath: eatingSound
+      value: 
+      objectReference: {fileID: 434645783}
+    - target: {fileID: 6667713633875343014, guid: b6e68df5dede1174eaddb66a90de363c,
+        type: 3}
+      propertyPath: drinkingSound
+      value: 
+      objectReference: {fileID: 517214513}
+    - target: {fileID: 6667713633875343014, guid: b6e68df5dede1174eaddb66a90de363c,
+        type: 3}
       propertyPath: playerResources
       value: 
       objectReference: {fileID: 1005835420}
@@ -2557,6 +2569,16 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1812375725}
+    - target: {fileID: 7152320357567466029, guid: b93a823974880cf4d8cde9bd93ba4382,
+        type: 3}
+      propertyPath: eatingSound
+      value: 
+      objectReference: {fileID: 434645783}
+    - target: {fileID: 7152320357567466029, guid: b93a823974880cf4d8cde9bd93ba4382,
+        type: 3}
+      propertyPath: drinkingSound
+      value: 
+      objectReference: {fileID: 517214513}
     - target: {fileID: 7152320357567466029, guid: b93a823974880cf4d8cde9bd93ba4382,
         type: 3}
       propertyPath: playerResources

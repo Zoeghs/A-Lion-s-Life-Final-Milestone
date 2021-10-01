@@ -55,6 +55,18 @@ public class PlayerMovement : MonoBehaviour
     // Collider to detect if the pounce hit anything
     [SerializeField] SphereCollider pounceCollider;
 
+    // Sound effects
+    [SerializeField] AudioSource walking;
+    [SerializeField] AudioSource sprinting;
+    [SerializeField] AudioSource sprinting2;
+    [SerializeField] AudioSource sprinting4;
+
+    // Sound effect bools
+    private bool walkingPlaying = false;
+    private bool sprintingPlaying = false;
+    private bool sprinting2Playing = false;
+
+
     #endregion
 
     void Start()
@@ -137,6 +149,10 @@ public class PlayerMovement : MonoBehaviour
         {
             // Apply movement based on input
             playerRb.velocity = move * moveSpeed;
+            print(playerRb.velocity.magnitude);
+
+            // Check for sounds
+            CheckForSounds();
         }
 
 
@@ -164,6 +180,69 @@ public class PlayerMovement : MonoBehaviour
             isSprinting = false;
         }
         #endregion
+    }
+
+    private void CheckForSounds()
+    {
+        // VALUES ARE HARD CODED, NEED TO CHANGE AT SOME POINT
+
+        if (walking != null)
+        {
+            // If the player is walking
+            if (playerRb.velocity.magnitude > 0 && playerRb.velocity.magnitude <= 6 && walkingPlaying == false)
+            {
+                // Play walking sound
+                walking.Play();
+
+                // Sound is playing
+                walkingPlaying = true;
+            }
+            // If the player is no longer walking
+            else if ((playerRb.velocity.magnitude <= 0 || playerRb.velocity.magnitude >= 8f) && walkingPlaying == true)
+            {
+                // Stop playing the walking sound
+                walking.Stop();
+
+                // Sound is no longer playing
+                walkingPlaying = false;
+            }
+            // If the player is sprinting
+            else if (playerRb.velocity.magnitude >= 8 && sprintingPlaying == false)
+            {
+                // Play sprinting sounds
+                sprinting.Play();
+
+                // Sound is playing
+                sprintingPlaying = true;
+            }
+            // If the player is no longer sprinting
+            else if ((playerRb.velocity.magnitude < 8) && sprintingPlaying == true)
+            {
+                // Stop playing the sound
+                sprinting.Stop();
+
+                // Sound is no longer playing
+                sprintingPlaying = false;
+            }
+            //// If the player is sprinting 2x
+            //else if (playerRb.velocity.magnitude >= 16 && sprinting2Playing == false)
+            //{
+            //    // Play sprinting sounds
+            //    sprinting2.Play();
+
+            //    // Sound is playing
+            //    sprinting2Playing = true;
+            //}
+            //// If the player is no longer sprinting 2x
+            //else if ((playerRb.velocity.magnitude < 16 || playerRb.velocity.magnitude >= 32) && sprinting2Playing == true)
+            //{
+            //    // Stop playing the sound
+            //    sprinting2.Stop();
+
+            //    // Sound is no longer playing
+            //    sprintingPlaying = false;
+            //}
+        }
     }
 
     private void ApplyGravity()

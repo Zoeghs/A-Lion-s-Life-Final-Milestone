@@ -270,6 +270,8 @@ MonoBehaviour:
   playerResources: {fileID: 0}
   restorationAmount: 1
   player: {fileID: 0}
+  eatingSound: {fileID: 0}
+  drinkingSound: {fileID: 0}
 --- !u!1 &6667713634533622634
 GameObject:
   m_ObjectHideFlags: 0

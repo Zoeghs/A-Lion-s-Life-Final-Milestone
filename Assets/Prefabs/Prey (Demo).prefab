@@ -1783,6 +1783,8 @@ MonoBehaviour:
   - {fileID: 4266689569932032802}
   - {fileID: 1148570001626199233}
   - {fileID: 1854303658794744898}
+  foodPrefab: {fileID: 0}
+  pounceCollider: {fileID: 0}
 --- !u!114 &8799925947052163866
 MonoBehaviour:
   m_ObjectHideFlags: 0

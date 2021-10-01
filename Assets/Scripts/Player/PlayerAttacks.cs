@@ -41,6 +41,10 @@ public class PlayerAttacks : MonoBehaviour
     // Collider to detect if the pounce hit anything
     [SerializeField] SphereCollider pounceCollider;
 
+    // Sound vars
+    [SerializeField] AudioSource quickAttackSound;
+    [SerializeField] AudioSource pounceSound;
+
     #endregion
 
     void Start()
@@ -83,6 +87,9 @@ public class PlayerAttacks : MonoBehaviour
             // Begin cooldown
             quickOnCooldown = true;
             quickScratchCooldown = 3f;
+
+            // Play sound
+            quickAttackSound.Play();
 
             // vv Add visuals for quick scratch here vv
         }
@@ -188,6 +195,9 @@ public class PlayerAttacks : MonoBehaviour
 
         // Player cannot pounce again until releasing the right mouse button
         canPounce = false;
+
+        // Play pounce sound
+        pounceSound.Play();
     }
     #endregion
 }

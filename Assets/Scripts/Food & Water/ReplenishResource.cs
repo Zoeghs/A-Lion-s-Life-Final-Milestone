@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ReplenishResource : MonoBehaviour
 {
+    #region Variables
+
     // Button prompt visuals
     [SerializeField] Image promptImage;
     [SerializeField] Text promptText;
@@ -36,6 +38,13 @@ public class ReplenishResource : MonoBehaviour
 
     // How close the player has to be in order to collect resource
     private float distance = 5f;
+
+    // Sound vars
+    [SerializeField] AudioSource eatingSound;
+    [SerializeField] AudioSource drinkingSound;
+    private bool soundPlaying = false;
+
+    #endregion
 
     void Start()
     {
@@ -116,6 +125,30 @@ public class ReplenishResource : MonoBehaviour
 
                 // Reset pivot scale
                 ResetPivotScale();
+
+                #region Sound
+
+                // Stop playing sounds
+                // If this is a food node
+                if (isFood == true && soundPlaying == true)
+                {
+                    // Stop playing eating sound
+                    eatingSound.Stop();
+
+                    // Sound is no longer playing
+                    soundPlaying = false;
+                }
+                // If this is a water node
+                else if (isFood == false && soundPlaying == true)
+                {
+                    // Stop playing drinking sound
+                    drinkingSound.Stop();
+
+                    // Sound is no longer playing
+                    soundPlaying = false;
+                }
+
+                #endregion
             }
         }
         // If player is farther away than the required distance
@@ -138,6 +171,12 @@ public class ReplenishResource : MonoBehaviour
             // If the node is a food node
             if (isFood == true)
             {
+                // Stop playing eating sound
+                eatingSound.Stop();
+
+                // Sound is no longer playing
+                soundPlaying = false;
+
                 // Resource is depleted
                 Destroy(gameObject);
             }
@@ -165,6 +204,30 @@ public class ReplenishResource : MonoBehaviour
 
             // Scale progress bar
             barFGPivot.localScale = new Vector3(currentPercentage, barFGPivot.localScale.y, barFGPivot.localScale.z);
+
+            #region Sound
+
+            // If the sound is not already playing
+            // If this is a food node
+            if (isFood == true && soundPlaying == false)
+            {
+                // Play eating sound
+                eatingSound.Play();
+
+                // Sound is playing
+                soundPlaying = true;
+            }
+            // If this is a water node
+            else if (isFood == false && soundPlaying == false)
+            {
+                // Play drinking sound
+                drinkingSound.Play();
+
+                // Sound is playing
+                soundPlaying = true;
+            }
+
+            #endregion
         }
     }
 
