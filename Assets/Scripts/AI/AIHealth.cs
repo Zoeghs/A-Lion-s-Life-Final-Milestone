@@ -61,7 +61,7 @@ public class AIHealth : MonoBehaviour
             currentAmount = 0;
 
             // AI 'turns into' a food node when it dies
-            Instantiate(foodPrefab, gameObject.transform);
+            //Instantiate(foodPrefab, gameObject.transform);
 
             // Destroy the AI at the highest parent level
             Destroy(gameObject.transform.parent.transform.parent.gameObject);
