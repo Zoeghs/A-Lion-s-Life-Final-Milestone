@@ -17,6 +17,5 @@ public class UILookAtCam : MonoBehaviour
     {
         // Point health canvas at the camera
         transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.back, mainCamera.transform.rotation * Vector3.up);
-
     }
 }

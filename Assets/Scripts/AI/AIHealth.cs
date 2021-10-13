@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class AIHealth : MonoBehaviour
 {
+    #region Variables
+
     // Access to other scripts
     [SerializeField] AITakeDamage takeDamage;
     [SerializeField] PlayerAttacks playerAttacks;
@@ -30,6 +32,8 @@ public class AIHealth : MonoBehaviour
 
     // Collider to detect if the players pounce hit the AI
     [SerializeField] SphereCollider pounceCollider;
+
+    #endregion
 
     void Start()
     {

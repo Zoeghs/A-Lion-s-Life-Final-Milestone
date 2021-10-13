@@ -42,8 +42,7 @@ public class PlayerAttacks : MonoBehaviour
     [SerializeField] SphereCollider pounceCollider;
 
     // Sound vars
-    [SerializeField] AudioSource quickAttackSound;
-    [SerializeField] AudioSource pounceSound;
+    private SoundController soundController;
 
     #endregion
 
@@ -60,6 +59,9 @@ public class PlayerAttacks : MonoBehaviour
 
         // Turn off pounce collider
         pounceCollider.enabled = false;
+
+        // Find sound controller in the scene
+        soundController = FindObjectOfType<SoundController>();
     }
 
     void Update()
@@ -89,7 +91,7 @@ public class PlayerAttacks : MonoBehaviour
             quickScratchCooldown = 3f;
 
             // Play sound
-            quickAttackSound.Play();
+            soundController.PlayQuickScratchSound();
 
             // vv Add visuals for quick scratch here vv
         }
@@ -197,7 +199,7 @@ public class PlayerAttacks : MonoBehaviour
         canPounce = false;
 
         // Play pounce sound
-        pounceSound.Play();
+        soundController.PlayPounceSound();
     }
     #endregion
 }

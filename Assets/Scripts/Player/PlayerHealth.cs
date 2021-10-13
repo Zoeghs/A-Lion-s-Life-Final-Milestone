@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour
 {
+    #region Variables
+
     // Array of health points (UI Images)
     [SerializeField] Image[] healthPoints;
 
@@ -28,6 +30,8 @@ public class PlayerHealth : MonoBehaviour
 
     // Regen vars
     private float regenAmount = 0.5f;
+
+    #endregion
 
     void Start()
     {

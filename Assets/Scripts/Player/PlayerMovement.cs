@@ -55,16 +55,15 @@ public class PlayerMovement : MonoBehaviour
     // Collider to detect if the pounce hit anything
     [SerializeField] SphereCollider pounceCollider;
 
-    // Sound effects
-    [SerializeField] AudioSource walking;
-    [SerializeField] AudioSource sprinting;
-    [SerializeField] AudioSource sprinting2;
-    [SerializeField] AudioSource sprinting4;
+    // Sound controller to gain access to all sound effects
+    private SoundController soundController;
 
     // Sound effect bools
     private bool walkingPlaying = false;
     private bool sprintingPlaying = false;
     private bool sprinting2Playing = false;
+    private bool sprinting4Playing = false;
+    private bool movememtSoundPlaying = false;
 
 
     #endregion
@@ -82,6 +81,9 @@ public class PlayerMovement : MonoBehaviour
 
         // Get camera swap script
         camSwap = mainCam.GetComponent<CameraSwap>();
+
+        // Find sound controller in the scene
+        soundController = FindObjectOfType<SoundController>();
     }
 
     private void FixedUpdate()
@@ -149,15 +151,21 @@ public class PlayerMovement : MonoBehaviour
         {
             // Apply movement based on input
             playerRb.velocity = move * moveSpeed;
-            print(playerRb.velocity.magnitude);
+
+            // If the player is walking diagonally (adding to their move speed)  ***HARD CODED NEED TO FIX***
+            if (playerRb.velocity.magnitude > 6)
+            {
+                // Clamp magnitide to walking speed
+                Vector3.ClampMagnitude(playerRb.velocity, 6);
+            }
 
             // Check for sounds
             CheckForSounds();
         }
 
-
         // Calculate the current speed the player is moving
         currentSpeed = playerRb.velocity.magnitude;
+        print(playerRb.velocity.magnitude);
 
         #region 3rd Person Mode
         // If the player is in 3rd person mode & is moving
@@ -184,64 +192,70 @@ public class PlayerMovement : MonoBehaviour
 
     private void CheckForSounds()
     {
-        // VALUES ARE HARD CODED, NEED TO CHANGE AT SOME POINT
-
-        if (walking != null)
+        // If the player is at walking speed
+        if (currentSpeed == originalMoveSpeed && walkingPlaying == false)
         {
-            // If the player is walking
-            if (playerRb.velocity.magnitude > 0 && playerRb.velocity.magnitude <= 6 && walkingPlaying == false)
-            {
-                // Play walking sound
-                walking.Play();
+            // Play walking sound
+            soundController.PlayWalkingSound();
+            walkingPlaying = true;
 
-                // Sound is playing
-                walkingPlaying = true;
-            }
-            // If the player is no longer walking
-            else if ((playerRb.velocity.magnitude <= 0 || playerRb.velocity.magnitude >= 8f) && walkingPlaying == true)
-            {
-                // Stop playing the walking sound
-                walking.Stop();
+            movememtSoundPlaying = true;
+        }
+        // If the player is at sprinting speed
+        else if (currentSpeed == sprintSpeed && sprintingPlaying == false)
+        {
+            // Stop playing walking sound
+            soundController.StopWalkingSound();
+            walkingPlaying = false;
 
-                // Sound is no longer playing
-                walkingPlaying = false;
-            }
-            // If the player is sprinting
-            else if (playerRb.velocity.magnitude >= 8 && sprintingPlaying == false)
-            {
-                // Play sprinting sounds
-                sprinting.Play();
+            // Play sprinting sound
+            soundController.PlaySprintingSound();
+            sprintingPlaying = true;
 
-                // Sound is playing
-                sprintingPlaying = true;
-            }
-            // If the player is no longer sprinting
-            else if ((playerRb.velocity.magnitude < 8) && sprintingPlaying == true)
-            {
-                // Stop playing the sound
-                sprinting.Stop();
+            movememtSoundPlaying = true;
+        }
+        // If the player is at sprinting 2x speed
+        else if (currentSpeed == sprintSpeed * 2 && sprinting2Playing == false)
+        {
+            // Stop playing sprinting sound
+            soundController.StopSprintingSound();
+            sprintingPlaying = false;
 
-                // Sound is no longer playing
-                sprintingPlaying = false;
-            }
-            //// If the player is sprinting 2x
-            //else if (playerRb.velocity.magnitude >= 16 && sprinting2Playing == false)
-            //{
-            //    // Play sprinting sounds
-            //    sprinting2.Play();
+            // Play sprinting 2x sound
+            soundController.PlaySprinting2xSound();
+            sprinting2Playing = true;
 
-            //    // Sound is playing
-            //    sprinting2Playing = true;
-            //}
-            //// If the player is no longer sprinting 2x
-            //else if ((playerRb.velocity.magnitude < 16 || playerRb.velocity.magnitude >= 32) && sprinting2Playing == true)
-            //{
-            //    // Stop playing the sound
-            //    sprinting2.Stop();
+            movememtSoundPlaying = true;
+        }
+        // If the player is at sprinting 4x speed
+        else if (currentSpeed == sprintSpeed * 4 && sprinting4Playing == false)
+        {
+            // Stop playing sprinting 2x sound
+            soundController.StopSprinting2xSound();
+            sprinting2Playing = false;
 
-            //    // Sound is no longer playing
-            //    sprintingPlaying = false;
-            //}
+            // Play sprinting 4x sound
+            soundController.PlaySprinting4xSound();
+            sprinting4Playing = true;
+
+            movememtSoundPlaying = true;
+        }
+        // If the player stops moving
+        else if (currentSpeed < originalMoveSpeed && movememtSoundPlaying == true)
+        {
+            // Stop playing all movement sounds
+            soundController.StopWalkingSound();
+            soundController.StopSprintingSound();
+            soundController.StopSprinting2xSound();
+            soundController.StopSprinting4xSound();
+
+            walkingPlaying = false;
+            sprintingPlaying = false;
+            sprinting2Playing = false;
+            sprinting4Playing = false;
+
+            movememtSoundPlaying = false;
+
         }
     }
 

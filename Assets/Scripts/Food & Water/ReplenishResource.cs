@@ -40,8 +40,7 @@ public class ReplenishResource : MonoBehaviour
     private float distance = 5f;
 
     // Sound vars
-    [SerializeField] AudioSource eatingSound;
-    [SerializeField] AudioSource drinkingSound;
+    private SoundController soundController;
     private bool soundPlaying = false;
 
     #endregion
@@ -73,6 +72,9 @@ public class ReplenishResource : MonoBehaviour
             playerResources.sprintAmount += 0.0005f;
             playerResources.jumpAmount += 0.0005f;
         }
+
+        // Find sound controller in the scene
+        soundController = FindObjectOfType<SoundController>();
     }
 
     private void OnMouseEnter()
@@ -133,7 +135,7 @@ public class ReplenishResource : MonoBehaviour
                 if (isFood == true && soundPlaying == true)
                 {
                     // Stop playing eating sound
-                    eatingSound.Stop();
+                    soundController.StopEatingSound();
 
                     // Sound is no longer playing
                     soundPlaying = false;
@@ -142,7 +144,7 @@ public class ReplenishResource : MonoBehaviour
                 else if (isFood == false && soundPlaying == true)
                 {
                     // Stop playing drinking sound
-                    drinkingSound.Stop();
+                    soundController.StopDrinkingSound();
 
                     // Sound is no longer playing
                     soundPlaying = false;
@@ -172,7 +174,7 @@ public class ReplenishResource : MonoBehaviour
             if (isFood == true)
             {
                 // Stop playing eating sound
-                eatingSound.Stop();
+                soundController.StopEatingSound();
 
                 // Sound is no longer playing
                 soundPlaying = false;
@@ -212,7 +214,7 @@ public class ReplenishResource : MonoBehaviour
             if (isFood == true && soundPlaying == false)
             {
                 // Play eating sound
-                eatingSound.Play();
+                soundController.PlayEatingSound();
 
                 // Sound is playing
                 soundPlaying = true;
@@ -221,7 +223,7 @@ public class ReplenishResource : MonoBehaviour
             else if (isFood == false && soundPlaying == false)
             {
                 // Play drinking sound
-                drinkingSound.Play();
+                soundController.PlayDrinkingSound();
 
                 // Sound is playing
                 soundPlaying = true;

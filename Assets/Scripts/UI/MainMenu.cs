@@ -15,7 +15,6 @@ public class MainMenu : MonoBehaviour
     {
         // Set main menu as default
         SwitchToMain();
-
     }
 
     public void SwitchToMain()

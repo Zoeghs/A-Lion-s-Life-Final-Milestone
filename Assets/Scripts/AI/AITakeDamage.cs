@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class AITakeDamage : MonoBehaviour
 {
+    #region Variables
+
     // How close the player has to be to land an attack
     private float attackDistance = 5f;
 
@@ -24,6 +26,8 @@ public class AITakeDamage : MonoBehaviour
     // Visual delay timer
     private float originalTime;
     private float timer = 0.5f;
+
+    #endregion
 
     void Start()
     {
@@ -63,8 +67,6 @@ public class AITakeDamage : MonoBehaviour
 
     public void OnMouseUp()
     {
-        print("mouse up");
-
         // The object is no longer being hit
         isHit = false;
     }
