@@ -135,7 +135,7 @@ public class ReplenishResource : MonoBehaviour
                 if (isFood == true && soundPlaying == true)
                 {
                     // Stop playing eating sound
-                    soundController.StopEatingSound();
+                    soundController.StopSound(SoundController.eatingSound);
 
                     // Sound is no longer playing
                     soundPlaying = false;
@@ -144,7 +144,7 @@ public class ReplenishResource : MonoBehaviour
                 else if (isFood == false && soundPlaying == true)
                 {
                     // Stop playing drinking sound
-                    soundController.StopDrinkingSound();
+                    soundController.StopSound(SoundController.drinkingSound);
 
                     // Sound is no longer playing
                     soundPlaying = false;
@@ -174,7 +174,7 @@ public class ReplenishResource : MonoBehaviour
             if (isFood == true)
             {
                 // Stop playing eating sound
-                soundController.StopEatingSound();
+                soundController.StopSound(SoundController.eatingSound);
 
                 // Sound is no longer playing
                 soundPlaying = false;
@@ -214,7 +214,7 @@ public class ReplenishResource : MonoBehaviour
             if (isFood == true && soundPlaying == false)
             {
                 // Play eating sound
-                soundController.PlayEatingSound();
+                soundController.PlaySound(SoundController.eatingSound);
 
                 // Sound is playing
                 soundPlaying = true;
@@ -223,7 +223,7 @@ public class ReplenishResource : MonoBehaviour
             else if (isFood == false && soundPlaying == false)
             {
                 // Play drinking sound
-                soundController.PlayDrinkingSound();
+                soundController.PlaySound(SoundController.drinkingSound);
 
                 // Sound is playing
                 soundPlaying = true;

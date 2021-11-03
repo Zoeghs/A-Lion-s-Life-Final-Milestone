@@ -91,7 +91,7 @@ public class PlayerAttacks : MonoBehaviour
             quickScratchCooldown = 3f;
 
             // Play sound
-            soundController.PlayQuickScratchSound();
+            soundController.PlaySound(SoundController.quickScratchSound);
 
             // vv Add visuals for quick scratch here vv
         }
@@ -199,7 +199,7 @@ public class PlayerAttacks : MonoBehaviour
         canPounce = false;
 
         // Play pounce sound
-        soundController.PlayPounceSound();
+        soundController.PlaySound(SoundController.pounceSound);
     }
     #endregion
 }

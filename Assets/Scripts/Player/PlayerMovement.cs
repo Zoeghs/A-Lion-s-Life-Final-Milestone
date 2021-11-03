@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     // Speed of the player
     [HideInInspector] public float originalMoveSpeed;
     [HideInInspector] public float moveSpeed = 8f;
+    [HideInInspector] public float walkingSpeed = 8f;
     [HideInInspector] public float sprintSpeed = 12f;
     [HideInInspector] public float currentSpeed;
     private float maxSpeed;
@@ -38,6 +39,8 @@ public class PlayerMovement : MonoBehaviour
     // Sprinting & jumping mode detection
     [HideInInspector] public bool isSprinting = false;
     [HideInInspector] public bool isJumping = false;
+    [HideInInspector] public bool isSprinting2 = false;
+    [HideInInspector] public bool isSprinting4 = false;
 
     // Sprint & jump locks
     [HideInInspector] public bool sprintLocked = false;
@@ -149,15 +152,9 @@ public class PlayerMovement : MonoBehaviour
         // If the update vel bool is not locked (the player is not pouncing)
         if (velUpdateLocked == false)
         {
-            // Apply movement based on input
-            playerRb.velocity = move * moveSpeed;
-
-            // If the player is walking diagonally (adding to their move speed)  ***HARD CODED NEED TO FIX***
-            if (playerRb.velocity.magnitude > 6)
-            {
-                // Clamp magnitide to walking speed
-                Vector3.ClampMagnitude(playerRb.velocity, 6);
-            }
+            // Apply movement based on input and movement mode
+            float clamp = MovementClamp();
+            playerRb.velocity = Vector3.ClampMagnitude(move * moveSpeed, clamp);
 
             // Check for sounds
             CheckForSounds();
@@ -186,68 +183,86 @@ public class PlayerMovement : MonoBehaviour
 
             // Player is no longer sprinting
             isSprinting = false;
+            isSprinting2 = false;
+            isSprinting4 = false;
         }
         #endregion
+    }
+
+    private float MovementClamp()
+    {
+        // Create variable to store what the clamp should be
+        float clamp = 6f;
+
+        // If the player is sprinting
+        if (isSprinting == true && isSprinting2 == false && isSprinting4 == false)
+        {
+            clamp = 8f;
+        }
+        // If the plyer is sprinting x2
+        else if (isSprinting2 == true)
+        {
+            clamp = 16f;
+        }
+        // If the player is sprinting x4
+        else if (isSprinting4)
+        {
+            clamp = 32f;
+        }
+
+        return clamp;
     }
 
     private void CheckForSounds()
     {
         // If the player is at walking speed
-        if (currentSpeed == originalMoveSpeed && walkingPlaying == false)
+        if (currentSpeed > 0 && currentSpeed <= sprintSpeed && walkingPlaying == false)
         {
-            // Play walking sound
-            soundController.PlayWalkingSound();
+            soundController.PlaySound(SoundController.walkingSound);
             walkingPlaying = true;
 
             movememtSoundPlaying = true;
         }
         // If the player is at sprinting speed
-        else if (currentSpeed == sprintSpeed && sprintingPlaying == false)
+        else if (isSprinting == true && sprintingPlaying == false)
         {
-            // Stop playing walking sound
-            soundController.StopWalkingSound();
+            soundController.StopSound(SoundController.walkingSound);
             walkingPlaying = false;
 
-            // Play sprinting sound
-            soundController.PlaySprintingSound();
+            soundController.PlaySound(SoundController.sprintingSound);
             sprintingPlaying = true;
 
             movememtSoundPlaying = true;
         }
         // If the player is at sprinting 2x speed
-        else if (currentSpeed == sprintSpeed * 2 && sprinting2Playing == false)
+        else if (isSprinting2 == true && sprinting2Playing == false)
         {
-            // Stop playing sprinting sound
-            soundController.StopSprintingSound();
+            soundController.StopSound(SoundController.sprintingSound);
             sprintingPlaying = false;
 
-            // Play sprinting 2x sound
-            soundController.PlaySprinting2xSound();
+            soundController.PlaySound(SoundController.sprinting2Sound);
             sprinting2Playing = true;
 
             movememtSoundPlaying = true;
         }
         // If the player is at sprinting 4x speed
-        else if (currentSpeed == sprintSpeed * 4 && sprinting4Playing == false)
+        else if (isSprinting4 == true && sprinting4Playing == false)
         {
-            // Stop playing sprinting 2x sound
-            soundController.StopSprinting2xSound();
+            soundController.StopSound(SoundController.sprinting2Sound);
             sprinting2Playing = false;
 
-            // Play sprinting 4x sound
-            soundController.PlaySprinting4xSound();
+            soundController.PlaySound(SoundController.sprinting4Sound);
             sprinting4Playing = true;
 
             movememtSoundPlaying = true;
         }
         // If the player stops moving
-        else if (currentSpeed < originalMoveSpeed && movememtSoundPlaying == true)
+        else if (currentSpeed <= 0 && movememtSoundPlaying == true)
         {
-            // Stop playing all movement sounds
-            soundController.StopWalkingSound();
-            soundController.StopSprintingSound();
-            soundController.StopSprinting2xSound();
-            soundController.StopSprinting4xSound();
+            soundController.StopSound(SoundController.walkingSound);
+            soundController.StopSound(SoundController.sprintingSound);
+            soundController.StopSound(SoundController.sprinting2Sound);
+            soundController.StopSound(SoundController.sprinting4Sound);
 
             walkingPlaying = false;
             sprintingPlaying = false;
@@ -301,20 +316,38 @@ public class PlayerMovement : MonoBehaviour
             // Player is now jumping
             isJumping = true;
 
-            // If player is also sprinting and has not hit the speed cap
-            if (isSprinting == true && moveSpeed < maxSpeed)
+            // Activate Super Sprint if nescessary
+            SuperSprint();
+        }
+    }
+
+    private void SuperSprint()
+    {
+        // If player is also sprinting and has not hit the speed cap
+        if (isSprinting == true && moveSpeed < maxSpeed)
+        {
+            // Give player a forward boost (lunge)
+            playerRb.AddForce(transform.forward * 2, ForceMode.Impulse);
+
+            // Give them some forward momentum (super sprint)
+            moveSpeed *= 2;
+
+            // Allow resources to deplete faster
+            foodDepletion.sprintIncrease = false;
+            waterDepletion.sprintIncrease = false;
+
+            // Determine what sprinting mode the player is in
+            if (moveSpeed >= originalMoveSpeed * 2 && moveSpeed < originalMoveSpeed * 4)
             {
-                // Give player a forward boost (lunge)
-                playerRb.AddForce(transform.forward * 2, ForceMode.Impulse);
-
-                // Give them some forward momentum (super sprint)
-                moveSpeed *= 2;
-
-                // Allow resources to deplete faster
-                foodDepletion.sprintIncrease = false;
-                waterDepletion.sprintIncrease = false;
-
+                isSprinting2 = true;
+                isSprinting4 = false;
             }
+            else if (moveSpeed >= originalMoveSpeed * 4)
+            {
+                isSprinting2 = false;
+                isSprinting4 = true;
+            }
+
         }
     }
 

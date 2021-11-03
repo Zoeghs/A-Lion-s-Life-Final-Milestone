@@ -43,6 +43,12 @@ public class Flee : MonoBehaviour
             // Flee from the player
             FleeFrom("Predator");
         }
+
+        // AI is listening
+        Hearing();
+
+        // AI is looking
+        Vision();
     }
 
     private void FleeFrom(string fleeTag)
@@ -75,5 +81,33 @@ public class Flee : MonoBehaviour
         // Returns distance that is our of range for fleeing if there is no predator in the scene
         return 100;
 
+    }
+
+    private void Hearing()
+    {
+
+    }
+
+    private void Vision()
+    {
+
+    }
+    
+    private void OnDrawGizmos()
+    {
+        // Head pos
+        Vector3 head = new Vector3(transform.position.x, transform.position.y + 0.25f, transform.position.z + 0.4f);
+
+        // Draw hearing range
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, 3);
+
+        // Draw vision cone
+        Gizmos.color = Color.red;
+        Gizmos.DrawFrustum(head, 5, transform.forward.z + 270, 0, 5);
+
+        // Draw how far the AI can see
+        Gizmos.color = Color.blue;
+        Gizmos.DrawLine(head, new Vector3(head.x, head.y, head.z + 5));
     }
 }
