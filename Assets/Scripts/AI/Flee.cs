@@ -12,58 +12,91 @@ public class Flee : MonoBehaviour
     // Access to nav mesh agent
     private NavMeshAgent navAgent;
 
-    // How close the player / predator has to be in order to run away (NEEDS TO LATER ACCOUNT FOR SOUND INSTEAD OF DISTANCE)
-    private float fleeDistance = 7f;
+    // How close the player / predator has to be in order to run away
+    private float fleeDistance = 50f;
 
     // Speed at which the AI object can run away
     //private float fleeSpeed = 6f;
+
+    // Vars for hearing and vision colliders
+    [SerializeField] GameObject hearingRange;
+    [SerializeField] GameObject visionCone;
+    private AIHearing hearingScript;
+    private AIVision visionScript;
+
+    // Distance vars
+    private float distanceFromPlayer;
+    private float distanceFromPredator;
+
 
     void Start()
     {
         // Get this object's nav mesh agent
         navAgent = gameObject.GetComponent<NavMeshAgent>();
+
+        // Get vision & hearing scripts
+        visionScript = visionCone.GetComponent<AIVision>();
+        hearingScript = hearingRange.GetComponent<AIHearing>();
     }
 
     void Update()
     {
         // Calculate distance from both player & predators
-        float distanceFromPlayer = CalculateDistance("Player");
-        float distanceFromPredator = CalculateDistance("Predator");
+        distanceFromPlayer = CalculateDistance("Player");
+        distanceFromPredator = CalculateDistance("Predator");
 
         // If this object needs to flee from the player
-        if (fleeFromPlayer == true && distanceFromPlayer <= fleeDistance)
+        if (fleeFromPlayer == true && visionScript.playerIsSeen == true)
         {
-            // Flee from the player
             FleeFrom("Player");
+        }
+        // if the AI hears the player, turn towards them
+        else if (fleeFromPlayer == true && hearingScript.playerIsHeard == true)
+        {
+            TurnTowards("Player");
         }
 
         // If this object needs to flee from predators
         if (fleeFromPredators == true && distanceFromPredator <= fleeDistance)
         {
-            // Flee from the player
             FleeFrom("Predator");
         }
+    }
 
-        // AI is listening
-        Hearing();
+    private void TurnTowards(string turnTag)
+    {
+        GameObject subject = GameObject.FindGameObjectWithTag(turnTag);
 
-        // AI is looking
-        Vision();
+        gameObject.transform.LookAt(subject.transform);
     }
 
     private void FleeFrom(string fleeTag)
     {
-        // Get specified object to flee from
-        GameObject toFleeFrom = GameObject.FindGameObjectWithTag(fleeTag);
+        // Continue to flee until AI is a certain distance away
+        for (int i = 0; i < 30; i++)
+        {
+            distanceFromPlayer = CalculateDistance("Player");
 
-        // Find vector from specified object to this object
-        Vector3 distanceVector = gameObject.transform.position - toFleeFrom.transform.position;
+            print("looping");
+            // Get specified object to flee from
+            GameObject toFleeFrom = GameObject.FindGameObjectWithTag(fleeTag);
 
-        // Calcualte new position
-        Vector3 newPos = gameObject.transform.position + distanceVector;
+            // Find vector from specified object to this object
+            Vector3 distanceVector = gameObject.transform.position - toFleeFrom.transform.position;
 
-        // Move the object away from the specified object
-        navAgent.SetDestination(newPos);
+            // Calcualte new position
+            Vector3 newPos = gameObject.transform.position + distanceVector;
+
+            // Move the object away from the specified object
+            navAgent.SetDestination(newPos);
+
+            // If the AI is far away enough from the player, it stops running
+            if (distanceFromPlayer > fleeDistance)
+            {
+                print("breaking");
+                break;
+            }
+        }
     }
 
     private float CalculateDistance(string distanceTag)
@@ -78,18 +111,8 @@ public class Flee : MonoBehaviour
             return distance;
         }
 
-        // Returns distance that is our of range for fleeing if there is no predator in the scene
+        // Returns distance that is out of range for fleeing if there is no predator in the scene
         return 100;
-
-    }
-
-    private void Hearing()
-    {
-
-    }
-
-    private void Vision()
-    {
 
     }
     
@@ -100,14 +123,14 @@ public class Flee : MonoBehaviour
 
         // Draw hearing range
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, 3);
+        Gizmos.DrawWireSphere(transform.position, 7);
 
         // Draw vision cone
-        Gizmos.color = Color.red;
-        Gizmos.DrawFrustum(head, 5, transform.forward.z + 270, 0, 5);
+        //Gizmos.color = Color.red;
+        //Gizmos.DrawFrustum(head, 5, transform.forward.z * 270, 0, 5);
 
         // Draw how far the AI can see
-        Gizmos.color = Color.blue;
-        Gizmos.DrawLine(head, new Vector3(head.x, head.y, head.z + 5));
+        //Gizmos.color = Color.blue;
+        //Gizmos.DrawLine(head, new Vector3(head.x, head.y, head.z + 3 * transform.forward.z));
     }
 }

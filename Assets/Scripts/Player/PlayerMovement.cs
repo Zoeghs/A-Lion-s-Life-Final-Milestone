@@ -162,7 +162,7 @@ public class PlayerMovement : MonoBehaviour
 
         // Calculate the current speed the player is moving
         currentSpeed = playerRb.velocity.magnitude;
-        print(playerRb.velocity.magnitude);
+        //print(playerRb.velocity.magnitude);
 
         #region 3rd Person Mode
         // If the player is in 3rd person mode & is moving

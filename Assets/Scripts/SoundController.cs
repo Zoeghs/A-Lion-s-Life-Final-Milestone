@@ -10,6 +10,17 @@ public class SoundController : MonoBehaviour
     // Make this a singleton instance
     public static SoundController instance = null;
 
+    // Clip loudness vars
+    private float updateStep = 0.1f;
+    private int sampleDataLength = 1024;
+    private float currentUpdateTime = 0f;
+    private float clipLoudness;
+    private float[] clipSampleData;
+    private float totalLoudness = 0f;
+
+    private float[] sampleLoudness;
+    private string[] sampleNames;
+
     #region Clip Name Database
     [HideInInspector] public const string playSound = "Play_Button_Opt4";
     [HideInInspector] public const string controlsSound = "Controls_Button_Opt8";
@@ -44,13 +55,31 @@ public class SoundController : MonoBehaviour
 
         // Prevent this controller from being destroyed when a reloading the scene
         DontDestroyOnLoad(gameObject);
-
     }
 
     private void Start()
     {
         // Instantiate the audio source array and get all audio sources in the scene
         audioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
+
+        // Set up clip sample data array with the appropriate length
+        if (audioSources == null)
+        {
+            Debug.LogError(GetType() + "Error in Start: there are no audio sources in the scene.");
+        }
+        else
+        {
+            clipSampleData = new float[sampleDataLength];
+
+            // Find out how loud each clip is
+            CalculateClipLoudness();
+        }
+    }
+
+    private void Update()
+    {
+        // This needs to funcion only as adding up how loud the player is being not calculating how loud each clip is
+        //PlayerTotalLoudness();
     }
 
     private AudioSource FindClip(string clipName)
@@ -89,5 +118,57 @@ public class SoundController : MonoBehaviour
 
         // Once found, stop the sound
         sound.Stop();
+    }
+
+    private void CalculateClipLoudness()
+    {
+        // Loops through all the samples and seaches each clip to calculate how loud it is.
+        for (int i = 0; i < audioSources.Length; i++)
+        {
+            audioSources[i].clip.GetData(clipSampleData, audioSources[i].timeSamples);
+            clipLoudness = 0f;
+
+            foreach (var sample in clipSampleData)
+            {
+                clipLoudness += Mathf.Abs(sample);
+            }
+
+            clipLoudness /= sampleDataLength;
+            print(clipLoudness);
+
+            // Attach the name to how loud the clip is
+            //sampleNames[i] = audioSources[i].name;
+            //sampleLoudness[i] = clipLoudness;
+        }
+
+    }
+
+
+    public void PlayerTotalLoudness()
+    {
+        // This function looks for what sound clips are playing and adds them to the total loudness.
+
+        currentUpdateTime += Time.deltaTime;
+
+        if (currentUpdateTime >= updateStep)
+        {
+            currentUpdateTime = 0f;
+
+            // Check what sound clips are playing
+            for (int i = 0; i < sampleNames.Length; i++)
+            {
+                //if ()
+                //{
+                    // Add current clip at position i to total loudness
+                    //totalLoudness += clipLoudness;
+                    //print(totalLoudness);
+                //}
+                //else
+                //{
+                    // Subtract from total loudness if clip is not playing
+                    //totalLoudness -= clipLoudness;
+                //}
+            }
+        }
     }
 }
