@@ -11,15 +11,11 @@ public class SoundController : MonoBehaviour
     public static SoundController instance = null;
 
     // Clip loudness vars
-    private float updateStep = 0.1f;
     private int sampleDataLength = 1024;
-    private float currentUpdateTime = 0f;
     private float clipLoudness;
     private float[] clipSampleData;
     private float totalLoudness = 0f;
-
-    private float[] sampleLoudness;
-    private string[] sampleNames;
+    private SoundLoudnessStorage[] sampleData;
 
     #region Clip Name Database
     [HideInInspector] public const string playSound = "Play_Button_Opt4";
@@ -62,6 +58,9 @@ public class SoundController : MonoBehaviour
         // Instantiate the audio source array and get all audio sources in the scene
         audioSources = FindObjectsOfType(typeof(AudioSource)) as AudioSource[];
 
+        // Instantiate sample date array to have enough room for every sample in the scene
+        sampleData = new SoundLoudnessStorage[audioSources.Length];
+
         // Set up clip sample data array with the appropriate length
         if (audioSources == null)
         {
@@ -78,10 +77,11 @@ public class SoundController : MonoBehaviour
 
     private void Update()
     {
-        // This needs to funcion only as adding up how loud the player is being not calculating how loud each clip is
-        //PlayerTotalLoudness();
+        // Adds up how loud the player is being each frame
+        PlayerTotalLoudness();
     }
 
+    #region Playing Audio Upon Request
     private AudioSource FindClip(string clipName)
     {
         // Search the audio source array for the specified sound clip
@@ -119,7 +119,9 @@ public class SoundController : MonoBehaviour
         // Once found, stop the sound
         sound.Stop();
     }
+    #endregion
 
+    #region Audio Loudness In The Scene At A Given Time
     private void CalculateClipLoudness()
     {
         // Loops through all the samples and seaches each clip to calculate how loud it is.
@@ -134,41 +136,59 @@ public class SoundController : MonoBehaviour
             }
 
             clipLoudness /= sampleDataLength;
-            print(clipLoudness);
 
-            // Attach the name to how loud the clip is
-            //sampleNames[i] = audioSources[i].name;
-            //sampleLoudness[i] = clipLoudness;
+            // If the name of the clip matches one that requires an artificial boost
+            float boost = AssignLoudnessBoost(i);
+
+            // Attach the name to how loud the clip is using custom class
+            sampleData[i] = new SoundLoudnessStorage(audioSources[i].name, clipLoudness, boost);
         }
-
     }
 
+    private float AssignLoudnessBoost(int i)
+    {
+        float boost = 0;
+
+        if (audioSources[i].name == "Sprinting")
+        {
+            boost = 1;
+        }
+        else if (audioSources[i].name == "Sprinting 2x")
+        {
+            boost = 1.5f;
+        }
+        else if (audioSources[i].name == "Sprinting 4x")
+        {
+            boost = 2;
+        }
+        // Anything that doesn't have one of the above names gets no boost
+        else
+        {
+            boost = 0;
+        }
+
+        return boost;
+    }
 
     public void PlayerTotalLoudness()
     {
         // This function looks for what sound clips are playing and adds them to the total loudness.
 
-        currentUpdateTime += Time.deltaTime;
+        totalLoudness = 0;
 
-        if (currentUpdateTime >= updateStep)
+        // Find all currently active sound clips
+        for (int i = 0; i < audioSources.Length; i++)
         {
-            currentUpdateTime = 0f;
-
-            // Check what sound clips are playing
-            for (int i = 0; i < sampleNames.Length; i++)
+            // If the sample is currently playing
+            if (audioSources[i].isPlaying == true)
             {
-                //if ()
-                //{
-                    // Add current clip at position i to total loudness
-                    //totalLoudness += clipLoudness;
-                    //print(totalLoudness);
-                //}
-                //else
-                //{
-                    // Subtract from total loudness if clip is not playing
-                    //totalLoudness -= clipLoudness;
-                //}
+                // Add it to the total loudness
+                float combinedLoudness = sampleData[i].AddLoudness();
+                totalLoudness += combinedLoudness;
             }
         }
+
+        print(totalLoudness);
     }
+    #endregion
 }

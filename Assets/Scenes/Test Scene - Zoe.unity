@@ -1861,6 +1861,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1755267828, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -204393015262055546, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267829, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -204393015262055546, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267830, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -204393015262055546, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267831, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -204393015262055546, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267832, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -7695808399036893301, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267833, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -7695808399036893301, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267834, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -7695808399036893301, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
+    - target: {fileID: 1755267835, guid: bec21d007034c3445a744424ca8ffac2, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -7695808399036893301, guid: 51a64080acf6b0846b7c3c7766cfea63,
+        type: 2}
     - target: {fileID: 8846379199170649218, guid: bec21d007034c3445a744424ca8ffac2,
         type: 3}
       propertyPath: m_Name
@@ -2404,6 +2444,11 @@ PrefabInstance:
     - target: {fileID: 3209784107786220931, guid: df83e60fd9448db4c87593224cfc2eab,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3209784107786220940, guid: df83e60fd9448db4c87593224cfc2eab,
+        type: 3}
+      propertyPath: fleeFromPredators
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3209784107786220943, guid: df83e60fd9448db4c87593224cfc2eab,
