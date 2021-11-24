@@ -14,7 +14,7 @@ public class SoundController : MonoBehaviour
     private int sampleDataLength = 1024;
     private float clipLoudness;
     private float[] clipSampleData;
-    private float totalLoudness = 0f;
+    [HideInInspector] public float totalLoudness = 0f;
     private SoundLoudnessStorage[] sampleData;
 
     #region Clip Name Database

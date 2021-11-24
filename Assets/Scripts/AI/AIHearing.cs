@@ -6,23 +6,37 @@ using UnityEngine;
 
 public class AIHearing : MonoBehaviour
 {
-    [HideInInspector] public bool playerIsHeard = false;
+    [SerializeField] bool isOuter;
+
+    // Different AI hearing states
+    [HideInInspector] public bool playerIsHeardIn = false;
+    [HideInInspector] public bool playerIsHeardOut = false;
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Player")
+        // If player has entered the AI's inner hearing range
+        if (collision.gameObject.tag == "Player" && isOuter == false)
         {
-            // Player has entered the AI's hearing range
-            playerIsHeard = true;
+            playerIsHeardIn = true;
+        }
+        // If player has entered the AI's outer hearing range
+        if (collision.gameObject.tag == "Player" && isOuter == true)
+        {
+            playerIsHeardOut = true;
         }
     }
 
     private void OnTriggerExit(Collider collision)
     {
-        if (collision.gameObject.tag == "Player")
+        // If player has left the AI's inner hearing range
+        if (collision.gameObject.tag == "Player" && isOuter == false)
         {
-            // Player has left the AI's hearing range
-            playerIsHeard = false;
+            playerIsHeardIn = false;
+        }
+        // If player has left the AI's outer hearing range
+        else if (collision.gameObject.tag == "Player" && isOuter == true)
+        {
+            playerIsHeardOut = false;
         }
     }
 }
