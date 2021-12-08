@@ -129,7 +129,7 @@ public class Flee : MonoBehaviour
                 state = "TURNING";
             }
             // If the player is making greater than 0.005 in noise, the AI turns away from the player and runs
-            else if (soundController.totalLoudness < stateThreshold)
+            else if (soundController.totalLoudness > stateThreshold)
             {
                 state = "FLEEING";
             }
