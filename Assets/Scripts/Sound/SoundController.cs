@@ -188,7 +188,7 @@ public class SoundController : MonoBehaviour
             }
         }
 
-        print(totalLoudness);
+        //print(totalLoudness);
     }
     #endregion
 }

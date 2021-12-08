@@ -7,7 +7,8 @@ public class Flee : MonoBehaviour
 {
     #region Variables
 
-    public string state = "";
+    // The state the AI is in
+    private string state = "DEFAULT";
 
     // What to flee from
     [SerializeField] bool fleeFromPlayer;
@@ -18,6 +19,7 @@ public class Flee : MonoBehaviour
 
     // How close the player / predator has to be in order to run away
     private float fleeTime = 10f;
+    private float currentFleeTime = 0f;
 
     // Speed at which the AI object can run away
     //private float fleeSpeed = 6f;
@@ -38,9 +40,6 @@ public class Flee : MonoBehaviour
     private float outerHearingRange = 12;
     private float innerHearingRange = 7;
 
-    // If the AI is currently fleeing
-    private bool currentlyFleeing = false;
-
     #endregion
 
 
@@ -55,46 +54,57 @@ public class Flee : MonoBehaviour
 
         // Find sound controller in the scene
         soundController = FindObjectOfType<SoundController>();
+
+        // Set current time
+        currentFleeTime = fleeTime;
     }
 
     void Update()
     {
+        // -- Notes: --
+        // WILL CURRENTLY NOT WORK FOR PREDATORS BECAUSE TOTAL LOUDNESS ONLY APPLIES TO THE PLAYER
+        // NEED TO TRACK LOUDNESS FOR PREDATORS IN THE FUTURE
+        // UPDATE STATE IS HARD CODED FOR PLAYER
+
         // Calculate distance from both player & predators
         distanceFromPlayer = CalculateDistance("Player");
         distanceFromPredator = CalculateDistance("Predator");
 
-        // Check if player is within hearing ranges
-        HearingVisionCheck("Player", distanceFromPlayer);
+        UpdateState();
 
-        // Check if predators are withing hearing ranges
-        // WILL CURRENTLY NOT WORK BECAUSE TOTAL LOUDNESS ONLY APPLIES TO THE PLAYER
-
-        Debug.Log("state of animalia: " + state);
+        //Debug.Log("state of animal: " + state);
     }
 
-    private void updateState()
+    private void UpdateState()
     {
-        // Use switches here
-
-        // when a state finishes running its code, switch to the default state
-        // Default state looks for what state it needs to switch into
+        switch (state)
+        {
+            case "FLEEING":
+                FleeFrom("Player");
+                break;
+            case "TURNING":
+                TurnTowards("Player");
+                state = "DEFAULT";
+                break;
+            default:
+                state = "DEFAULT";
+                DetectState(distanceFromPlayer);
+                break;
+        }
     }
 
-
-
-    private void HearingVisionCheck(string targetTag, float distance)
+    private void DetectState(float distance)
     {
-        GameObject player = GameObject.FindGameObjectWithTag(targetTag);
+        // -- Conditions for state switching --
 
-        // If the player is in the outer hearing range and is making less than 0.005 in noise, no reaction from AI
+        float stateThreshold = 0.005f;
 
         // If the player is in the outer hearing range
         if (distance < outerHearingRange && distance > innerHearingRange)
         {
             // If the player is making greater than 0.005 in noise, the AI turns towards the player
-            if (soundController.totalLoudness > 0.005f && currentlyFleeing == false)
+            if (soundController.totalLoudness > stateThreshold && state != "FLEEING")
             {
-                TurnTowards(targetTag);
                 state = "TURNING";
             }
         }
@@ -102,23 +112,26 @@ public class Flee : MonoBehaviour
         else if (distance < innerHearingRange)
         {
             // If the player is in the AI vision cone (this behaviour is checked first as it overrides any sound behaviours)
-            if (visionScript.playerIsSeen == true && currentlyFleeing == false)
+            if (visionScript.playerIsSeen == true || state == "FLEEING")
             {
-                FleeFrom(targetTag);
                 state = "FLEEING";
             }
             // If the player is making less than 0.005 in noise, the AI turns towards the player
-            else if (soundController.totalLoudness < 0.005f && currentlyFleeing == false)
+            else if (soundController.totalLoudness < stateThreshold && state != "FLEEING")
             {
-                TurnTowards(targetTag);
                 state = "TURNING";
             }
             // If the player is making greater than 0.005 in noise, the AI turns away from the player and runs
-            else if (soundController.totalLoudness < 0.005f && currentlyFleeing == false)
+            else if (soundController.totalLoudness < stateThreshold || state == "FLEEING")
             {
-                FleeFrom(targetTag);
                 state = "FLEEING";
             }
+        }
+        // If the player is in the outer hearing range and is making less than 0.005 in noise, no reaction from AI
+        else
+        {
+            // Therefore is in default state
+            state = "DEFAULT";
         }
     }
 
@@ -131,14 +144,15 @@ public class Flee : MonoBehaviour
 
     private void FleeFrom(string fleeTag)
     {
-        // Set current time
-        float currentFleeTime = fleeTime;
-
-        currentlyFleeing = true;
-
-        // Loop for how long is specified
-        for (int i = 0; i < currentFleeTime; i++)
+        // Flee for specified time in seconds
+        if (currentFleeTime > 0)
         {
+            // Force flee state until finished
+            if (state == "TURNING")
+            {
+                state = "FLEEING";
+            }
+
             // Get specified object to flee from
             GameObject toFleeFrom = GameObject.FindGameObjectWithTag(fleeTag);
 
@@ -154,8 +168,14 @@ public class Flee : MonoBehaviour
             // Update time
             currentFleeTime -= Time.deltaTime;
         }
+        else
+        {
+            // Return state to default after the AI has finished fleeing
+            state = "DEFAULT";
 
-        currentlyFleeing = false;
+            // Reset time
+            currentFleeTime = fleeTime;
+        }
     }
 
     private float CalculateDistance(string distanceTag)
