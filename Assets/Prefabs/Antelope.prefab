@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fleeFromPlayer: 1
-  fleeFromPredators: 1
+  fleeFromPredators: 0
   hearingRange: {fileID: 0}
   visionCone: {fileID: 3379836400781947988}
 --- !u!195 &3209784107786220941
@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 8468362070979688118}
   - component: {fileID: 3379836400781947989}
   - component: {fileID: 7896891293806141325}
+  - component: {fileID: 2979669185788484213}
   m_Layer: 0
   m_Name: Vision Cone
   m_TagString: Untagged
@@ -232,6 +233,19 @@ MeshCollider:
   m_CookingOptions: 30
   m_Mesh: {fileID: -2934717439318261032, guid: 98b4606f39eefbf4a9b1c4acb89c1d5f, type: 3}
 --- !u!114 &7896891293806141325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3379836400781947988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 897d00e3913512046961198eab91e110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerIsSeen: 0
+--- !u!114 &2979669185788484213
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

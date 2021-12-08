@@ -36,6 +36,9 @@ public class Flee : MonoBehaviour
     // Access to sound controller
     private SoundController soundController;
 
+    // Access to cover collision script
+    private PlayerCover playerCoverScript;
+
     // Hearing range distances
     private float outerHearingRange = 12;
     private float innerHearingRange = 7;
@@ -54,6 +57,9 @@ public class Flee : MonoBehaviour
 
         // Find sound controller in the scene
         soundController = FindObjectOfType<SoundController>();
+
+        // Find player cover script
+        playerCoverScript = FindObjectOfType<PlayerCover>();
 
         // Set current time
         currentFleeTime = fleeTime;
@@ -112,7 +118,8 @@ public class Flee : MonoBehaviour
         else if (distance < innerHearingRange)
         {
             // If the player is in the AI vision cone (this behaviour is checked first as it overrides any sound behaviours)
-            if (visionScript.playerIsSeen == true || state == "FLEEING")
+            // AI cannot see the player if the player is in cover
+            if (visionScript.playerIsSeen == true && playerCoverScript.playerIsInCover == false)
             {
                 state = "FLEEING";
             }
@@ -122,7 +129,7 @@ public class Flee : MonoBehaviour
                 state = "TURNING";
             }
             // If the player is making greater than 0.005 in noise, the AI turns away from the player and runs
-            else if (soundController.totalLoudness < stateThreshold || state == "FLEEING")
+            else if (soundController.totalLoudness < stateThreshold)
             {
                 state = "FLEEING";
             }
